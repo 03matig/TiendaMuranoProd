@@ -1,0 +1,82 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Header from "./components/Header";
+import ProductCard from "./components/Catalogo/ProductCard";
+import Filters from "./components/Catalogo/Filters";
+import Footer from "./components/Footer";
+import styles from "./Catalog.module.css";
+import supabase from "@/lib/cs"; // 🔹 Importar configuración de Supabase
+
+const Catalog = () => {
+  const [products, setProducts] = useState([]); // 🔹 Estado para los productos
+  const [filteredProducts, setFilteredProducts] = useState([]); // 🔹 Estado para los filtros
+  const [loading, setLoading] = useState(true);
+  const router = useRouter(); // 🔹 Para redirigir al detalle del producto
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      const { data, error } = await supabase.from("stock").select("*");
+
+      if (error) {
+        console.error("Error obteniendo productos:", error.message);
+      } else {
+        console.log("Valores de nombre_archivo:", data.map(p=>p.nombre_archivo));
+        setProducts(data);
+        setFilteredProducts(data); // Inicializa los filtros con los datos originales
+      }
+      setLoading(false);
+    };
+
+    fetchProducts();
+  }, []);
+
+  // 🔹 Manejar el clic en una ProductCard
+  const handleProductClick = (product) => {
+    router.push(
+      `/Vistas/product/${product.id_prenda}?image=${encodeURIComponent(product.nombre_archivo)}&name=${encodeURIComponent(product.nombre)}&desc=${encodeURIComponent(product.descripcion)}&price=${product.precio}&sizes=${encodeURIComponent(product.tallas ? product.tallas.join(",") : "")}`
+    );
+  };
+
+  return (
+    <>
+      <Header />
+      <div className={styles.bodyPadding}>
+        <div className={styles.catalogContainer}>
+          {/* Sidebar con filtros */}
+          <Filters setFilteredProducts={setFilteredProducts} />
+
+          {/* Sección principal de productos */}
+          <div className={styles.productsSection}>
+            <h1 className={styles.title}>Catálogo</h1>
+
+            {/* Mostrar mensaje de carga */}
+            {loading ? (
+              <p className={styles.loadingMessage}>Cargando productos...</p>
+            ) : (
+              <div className={styles.productsGrid}>
+                {filteredProducts.map((product) => (
+                  <div key={product.id_prenda} onClick={() => handleProductClick(product)}>
+                    <ProductCard product={product} />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Paginación */}
+            <div className={styles.pagination}>
+              <button className={styles.pageButton}>« Anterior</button>
+              <span>Página 1 de 3</span>
+              <button className={styles.pageButton}>Siguiente »</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </>
+  );
+};
+
+export default Catalog;

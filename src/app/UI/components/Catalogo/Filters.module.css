@@ -1,0 +1,36 @@
+.sidebar {
+    flex: 1;
+    background: #f9f9f9;
+    padding: 1rem;
+    border-radius: 10px;
+  }
+  
+  .h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .filterButton {
+    background: #0070f3;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 1rem;
+  }
+  
+  .filterButton:hover {
+    background: #005bb5;
+  }
+  
+  .select, .input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    color: #000000;
+    background-color: #ffffff;
+  }
+  

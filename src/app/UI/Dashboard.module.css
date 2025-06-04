@@ -1,0 +1,73 @@
+/* 🔹 Contenedor principal */
+.dashboardContainer {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* 🔹 Contenido principal */
+.mainContent {
+  flex-grow: 1;
+  margin-left: 250px; /* deja espacio para la sidebar */
+  margin-top: 90px;   /* deja espacio para la navbar */
+  padding: 1rem;      /* opcional: espacio interno */
+  text-align: center;
+}
+
+.h1 {
+  font-size: 2.4rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.h2 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.role {
+  font-size: 1.4rem;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* 🔹 Sección de estadísticas */
+.statsContainer {
+  display: flex;
+  gap: 50px;
+  margin-top: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.statBox {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  width: 350px;
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.statBox:hover {
+  transform: scale(1.05);
+}
+
+.h3 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #222;
+}
+
+.statBox p {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #007bff;
+}

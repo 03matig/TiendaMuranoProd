@@ -1,0 +1,306 @@
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #111827; /* Tailwind bg-gray-900 */
+    color: #d1d5db; /* Tailwind text-gray-300 */
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    position: fixed;
+  }
+  
+  .logo {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .logoIcon {
+    font-size: 1.5rem;
+  }
+  
+  .nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .navSection {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+  }
+  
+  .navSection li {
+    margin-bottom: 0.75rem;
+  }
+  
+  .navSection a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    color: inherit;
+    text-decoration: none;
+    transition: background-color 0.2s;
+  }
+  
+  .navSection a:hover {
+    background-color: #1f2937; /* Tailwind bg-gray-800 */
+  }
+  
+  .activeLink {
+    background-color: #1f2937;
+    color: white;
+  }
+  
+  .sectionTitle {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    color: #9ca3af; /* text-gray-400 */
+  }
+  
+  .badge {
+    background-color: #374151; /* bg-gray-700 */
+    border-radius: 9999px;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.75rem;
+    margin-right: 0.5rem;
+    color: white;
+  }
+  
+  .footer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid #374151;
+    font-size: 0.875rem;
+    cursor: pointer;
+  }
+  
+  .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+  }
+  
+  .clickable {
+    cursor: pointer;
+  }
+  
+  .logoImage {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.4); /* Sombra blanca tenue */
+    background-color: #334155;
+    transform: scale(1);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .logoImage:hover {
+    transform: scale(1.15);
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 180px;
+    right: 0;
+    height: 90px;
+    background-color: #111827; /* o el color que estés usando */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centra el texto horizontalmente */
+    padding: 0 1rem;
+    z-index: 100;
+  }
+  
+  .navbar h1 {
+    margin: 0;
+    font-family: inherit; /* Hereda misma fuente */
+    font-size: 2rem;
+    font-weight: 600;
+    color: white;
+  }
+  
+  .profileIcon {
+    position: absolute;
+    right: 1rem;
+  }
+
+  .profilePicture {
+    padding-right: 2rem;
+    transform: scale(1);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .profilePicture:hover {
+    cursor: pointer;
+    transform: scale(1.25);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .profileIcon img {
+    width: 36px;
+    height: 36px;
+    border-radius: 9999px;
+  }
+  
+  
+  .profileIcon img {
+    width: 36px;
+    height: 36px;
+    border-radius: 9999px;
+    cursor: pointer;
+  }
+  
+  .title {
+    font-family: "Merriweather", serif;
+    font-size: 2rem;
+    letter-spacing: 0.5px; /* o incluso 1px si quieres más aire */
+    font-variant: small-caps;
+    color: #f3f4f6; /* Tailwind gray-100 */
+    font-weight: 300;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    transform: scale(1);
+    transition: transform 0.3s ease-in-out;
+    text-shadow:
+    -1px -1px 0 #000,  
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000;
+  }
+
+  .title:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  .modalContent {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+  }
+
+  .uploadSection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem; /* Espacio entre input y texto */
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+    align-items: center;
+  }  
+
+  .hiddenFileInput {
+    display: none;
+  }
+
+  .fileName {
+    color: #6b7280; /* Tailwind gray-500 */
+    font-style: italic;
+  }
+  
+  .advertenciaArchivo {
+    font-size: 0.75rem;
+  }
+
+  .subirArchivo {
+    align-items: center;
+    background-color: #ffffff;
+    margin-bottom: 0;
+    font-weight: bold;
+  }
+  
+  .inputSubirProducto {
+    color: #000000;
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #ffffff;
+    text-align: center;
+  }
+  
+  .modalButtons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .modalButtons button {
+    flex: 1;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    background-color: #1f2937;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .modalButtons button:hover {
+    background-color: #374151;
+  }
+  
+  .divider {
+    height: 1px;
+    background-color: #ccc;
+    margin: 1rem 0;
+  }
+
+  .subirProducto {
+    text-align: center;
+    padding-bottom: 1rem;
+  }
+
+  .label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  color: var(--foreground); /* usa variables si tienes modo oscuro */
+  cursor: pointer;
+  margin-bottom: 0.75rem;
+}
+
+.label input[type="checkbox"] {
+  accent-color: #0070f3; /* color del check (navegadores modernos) */
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+}

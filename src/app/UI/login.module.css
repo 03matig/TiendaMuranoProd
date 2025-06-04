@@ -1,0 +1,103 @@
+.body{
+    background-color: #ffff
+}
+
+/* Contenedor principal */
+.loginContainer {
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Imagen de fondo */
+.backgroundWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0; /* La imagen debe estar en el fondo */
+}
+
+/* Capa oscura sobre la imagen */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Oscurece la imagen */
+    z-index: 1; /* Está sobre la imagen */
+    pointer-events: none;
+}
+
+/* Caja del formulario */
+.loginBox {
+    position: absolute; /* Se mantiene absoluto para flotar sobre el fondo */
+    z-index: 10; /* 🔥 Se sube a un z-index alto para que esté sobre todo */
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.85); /* Mayor opacidad */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+}
+
+
+/* Inputs del formulario */
+.input {
+    color: #000000;
+    width: 100%;
+    padding: 0.8rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(3px);
+}
+
+/* Botón de inicio de sesión */
+.button {
+    width: 100%;
+    background: #0070f3;
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.button:hover {
+    background: #005bb5;
+}
+
+/* Mensaje de error */
+.error {
+    color: red;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+/* Link de registro */
+.registerLink {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+.registerLink a {
+    color: #0070f3;
+    text-decoration: none;
+}
+
+.registerLink a:hover {
+    text-decoration: underline;
+}

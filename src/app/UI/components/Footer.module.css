@@ -1,0 +1,67 @@
+.footer {
+    background-color: #f9f8f4;
+    padding: 2rem 1rem;
+  }
+  
+  .container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+  
+  .section {
+    flex: 1;
+    min-width: 200px;
+    text-align: left;
+  }
+  
+  .section h3 {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .section a {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+  }
+  
+  .section a:hover {
+    text-decoration: underline;
+  }
+  
+  .socialIcons {
+    display: flex;
+    gap: 10px;
+    font-size: 1.2rem;
+  }
+  
+  .socialIcons a {
+    color: #333;
+  }
+  
+  .socialIcons a:hover {
+    color: #0070f3;
+  }
+  
+  .divider {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 1.5rem 0;
+    width: 100%;
+  }
+  
+  .copyright {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  
+  .p {
+    margin: auto;
+  }

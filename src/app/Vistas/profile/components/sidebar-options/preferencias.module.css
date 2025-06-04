@@ -1,0 +1,43 @@
+.container {
+  padding: 1rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.option {
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.option input {
+  margin-right: 0.5rem;
+}
+
+.button {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.5rem 1.2rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  background-color: #1e40af;
+}
+
+.checkbox {
+  accent-color: #ffffff; /* Azul Murano */
+  background-color: white;
+  border: 1px solid #ccc;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+

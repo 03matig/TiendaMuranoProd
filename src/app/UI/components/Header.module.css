@@ -1,0 +1,367 @@
+/* Estilo general del header */
+.header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    z-index: 50;
+    background-color: white;
+}
+
+/* Barra superior */
+.topBar {
+    background-color: #1f1f1f; /* Ajustado al color de la referencia */
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.topBar a {
+    color: #0070f3;
+    text-decoration: none;
+}
+
+.topBar a:hover {
+    text-decoration: underline;
+}
+
+/* Barra principal */
+.navBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+}
+
+/* Logo */
+.logo {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.carritoContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: #0070f3;
+}
+
+
+/* Campo de búsqueda y carrito */
+.rightSection {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-right: 40px;
+    gap: 1rem;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.searchBar {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 999px;
+    width: 200px;
+    font-size: 0.875rem;
+    background-color: white;
+    margin-left: 40px;
+    margin-top: 10px;
+    margin-right: auto; /* Para alinear la búsqueda a la izquierda */
+    transform: scale(1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.searchBar:hover{
+  transform: scale(1.25);
+  transition: transform 0.3s ease-in-out;
+}
+
+.searchBar:focus {
+    outline: none;
+    border-color: #0070f3;
+}
+
+.carrito {
+    position: relative;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    padding:10px;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+    cursor: pointer;
+    color: #4a4a4a;
+    margin-left: 1rem; /* Espaciado extra para separarlo */
+    transform: scale(1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.carrito:hover {
+    background: rgba(200, 200, 200, 0.5);
+    cursor: pointer;
+    transform: scale(1.25);
+    transition: transform 0.3s ease-in-out;
+    color: #0070f3;
+}
+
+.carrito span {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #ff4d4f;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+/* Estilos del menú desplegable */
+.dropdown {
+    position: absolute;
+    top: 50px; /* Ajusta la posición debajo del carrito */
+    right: 0;
+    width: 400px;
+    height: auto;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 1rem;
+    text-align: center;
+    z-index: 100;
+    overflow-y: auto;
+    transition: max-height 0.5s ease-in-out;
+    max-height: 500px; /* Altura máxima del dropdown */
+  }
+  
+  .dropdown.open {
+    max-height: 300px;
+  }
+
+  .dropdown.closed {
+    max-height: 0;
+  }
+
+  /* Flecha indicadora */
+  .dropdown::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    right: 15px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent white transparent;
+  }
+
+/* Línea divisoria */
+.divider {
+    width: 60%;
+    height: 1px;
+    background-color: #ccc;
+    margin: 10px auto;
+}
+
+/* Navegación */
+.navContainer {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px 16px;
+}
+
+.nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav ul {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav ul li a:hover {
+    color: #0070f3;
+}
+
+.login {
+    flex: 1; /* Permite que el contenido ocupe espacio a la izquierda */
+    text-align: left;
+    margin-left: 110px;
+}
+
+.loginregister{
+    display: flex;
+    justify-content: space-between; /* 👈 Distribuye los elementos a los extremos */
+    align-items: center;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.registrarse {
+    flex: 1; /* Permite que el contenido ocupe espacio a la derecha */
+    text-align: right;
+    margin-right: 110px;
+}
+
+.login a, .registrarse a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+  }
+  
+.login a:hover, .registrarse a:hover {
+    color: #0070f3; /* Efecto hover en los enlaces */
+  }
+
+  /* Divider */
+.divider {
+    border: none;
+    border-top: 1px solid #ddd; /* Línea gris clara */
+    margin: 1rem 0;
+    width: 100%;
+  }
+
+  /* Estilos del carrito */
+  .cartItem {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .cartItem img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+  }
+  
+  .cartItem div {
+    flex-grow: 1;
+  }
+
+  /* Botón "Ir a pagar" */
+  .checkoutButton {
+    display: block;
+    width: 100%;
+    background: #0070f3;
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .checkoutButton:hover {
+    background: #005bb5;
+  }
+  
+  .profileContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 50%;
+    transform: scale(1.25);
+    color: #0070f3;
+  }
+
+  .profileContainer:hover {
+      background: rgba(200, 200, 200, 0.5);
+      cursor: pointer;
+  }
+  
+  .profilePic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* 🔹 Hace la imagen circular */
+    object-fit: cover;
+    border: 2px solid #ffffff; /* 🔹 Agrega un borde para destacar */
+  }
+  
+  .profileDropdown {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    min-width: 120px;
+    z-index: 100;
+  }
+
+  .profileDropdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .profileDropdown ul li {
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+
+  .profileDropdown ul li:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .profileIconButton {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* 🔹 esto se mantiene */
+    transition: background 0.3s ease-in-out, transform 0.3s ease-in-out;
+  }
+  
+  .profileIconButton:hover {
+    transform: scale(1.25);
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+    color: #0070f3;
+  }
+
+  .logoHeader {
+    transform: scale(1);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .logoHeader:hover {
+    transform: scale(1.25);
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+  }

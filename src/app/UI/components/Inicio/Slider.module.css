@@ -1,0 +1,186 @@
+.slider {
+  position: relative;
+  width: 100%;
+  max-height: 100vh;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  overflow: hidden;
+  transition: height 0.5s ease-in-out;
+  flex-direction: column;
+}
+
+.slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  opacity: 1;
+  transition: opacity 1s ease-in-out;
+  cursor: pointer;
+  object-position: top center;
+
+}
+
+.noScale {
+  width: auto;
+  height: auto;
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: none;
+}
+
+/* Texto sobre imagen */
+.text {
+  margin-top: 1rem;
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%) scale(1);
+  text-align: center;
+  color: black;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  transform-origin: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.text:hover {
+  transform: translateX(-50%) scale(1.05); /* 👈 combinas ambos en hover */
+  transition: transform 0.3s ease-in-out;
+}
+
+.button {
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transform: scale(1);
+  transition: background-color 0.3s ease;
+  transition: transform 0.3s ease-in-out;
+}
+
+.button:hover {
+  background-color: #555;
+  transform: scale(1.05);
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Flechas */
+.prev,
+.next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2rem;
+  background: rgba(255, 255, 255, 0.6);
+  border: none;
+  border-radius: 50%;
+  color: #333;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  z-index: 10;
+  transition: background 0.3s ease;
+}
+
+.prev:hover,
+.next:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.prev {
+  left: 1rem;
+}
+
+.next {
+  right: 1rem;
+}
+
+/* Dots */
+.dots {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+  gap: 0.5rem;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background: #999;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.activeDot {
+  background: #333;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55); /* 50% oscuro */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5; /* Justo encima de la imagen */
+}
+
+.logo {
+  width: auto;
+  height: 120px;
+  object-fit: contain;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.logo:hover {
+  transform: scale(1.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+
+.fadeOut {
+  opacity: 0;
+  animation: fadeOutAnim 1s forwards;
+}
+
+.fadeIn {
+  opacity: 0;
+  animation: fadeInAnim 1s forwards;
+}
+
+/* Nueva animación para el fade-in */
+@keyframes fadeInAnim {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOutAnim {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
