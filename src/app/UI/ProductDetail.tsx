@@ -12,14 +12,16 @@ const ProductDetail = () => {
   const searchParams = useSearchParams();
   const { addToCart } = useCart();
 
+  const sizesParam = searchParams.get("sizes");
   const product = {
     id: searchParams.get("id") ?? crypto.randomUUID(),
     name: searchParams.get("name"),
     description: searchParams.get("desc"),
     price: searchParams.get("price"),
     imageName: `/images/${searchParams.get("image")}`,
-    sizes: searchParams.get("sizes") ? searchParams.get("sizes").split(",") : [],
-  }
+    sizes: sizesParam ? sizesParam.split(",") : [],
+  };
+
 
   if (!product.imageName || !product.name || !product.description || !product.price) {
     return <p>Producto no encontrado.</p>;
@@ -69,8 +71,23 @@ const ProductDetail = () => {
             )}
 
             {/* Botón para añadir al carrito */}
-            <button className={styles.addToCartButton} onClick={() => addToCart(product)}>
-            Añadir al carrito
+            <button className={styles.addToCartButton} onClick={() => {
+              if (!product.name || !product.description || !product.price) {
+                alert("Faltan datos del producto");
+                return;
+              }
+
+              addToCart({
+                id: product.id,
+                name: product.name,
+                description: product.description,
+                price: parseFloat(product.price), // Paso 2: asegurar número
+                imageName: product.imageName,
+                sizes: product.sizes,
+                quantity: 1
+              });
+            }}>
+              Añadir al carrito
             </button>
           </div>
         </div>
