@@ -13,7 +13,8 @@ import {
   FaChartPie,
   FaPlusCircle,
   FaUserPlus,
-  FaUserCircle
+  FaUserCircle,
+  FaUser
 } from "react-icons/fa";
 
 const Sidebar = () => {
@@ -22,11 +23,11 @@ const Sidebar = () => {
   const [isSponsorModalOpen, setIsSponsorModalOpen] = useState(false);
   const [nombre, setNombre] = useState("");
   const [uploading, setUploading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [precio, setPrecio] = useState("");
   const [desc, setDesc] = useState("");
   const [useCustomTallas, setUseCustomTallas] = useState(false);
-  const [tallas, setTallas] = useState([]);
+  const [tallas, setTallas] = useState<string[]>([]);
   const [userName, setUserName] = useState("");
 
   const openStockModal = () => setIsStockModalOpen(true);
@@ -38,13 +39,13 @@ const Sidebar = () => {
   const [sponsorNombre, setSponsorNombre] = useState("");
   const [sponsorURL, setSponsorURL] = useState("");
   const [sponsorDesc, setSponsorDesc] = useState("");
-  const [sponsorImg, setSponsorImg] = useState(null);
-  const [sponsorLogo, setSponsorLogo] = useState(null);
-  const sponsorImgRef = useRef(null);
-  const sponsorLogoRef = useRef(null);
+  const [sponsorImg, setSponsorImg] = useState<File | null>(null);
+  const [sponsorLogo, setSponsorLogo] = useState<File | null>(null);
 
 
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const sponsorImgRef = useRef<HTMLInputElement | null>(null);
+  const sponsorLogoRef = useRef<HTMLInputElement | null>(null);
 
   const handleBrowseClick = () => {
     if (fileInputRef.current) {
@@ -113,7 +114,7 @@ const Sidebar = () => {
     setUploading(false);
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setSelectedFile(e.target.files[0]);
     }
@@ -193,6 +194,8 @@ const Sidebar = () => {
             <li><a className={styles.clickable}><FaCalendarAlt /> <span>Calendario</span></a></li>
             <li><a onClick={() => router.push("/Vistas/dashboard/orders")} className={styles.clickable}><FaFileAlt /> <span>Revisar Pedidos</span></a></li>
             <li><a className={styles.clickable}><FaChartPie /> <span>Estadísticas de Venta</span></a></li>
+            <li><a onClick={() => router.push("/Vistas/dashboard/sponsors")} className={styles.clickable}><FaUser /> <span>Visualizar Sponsors</span></a></li>
+
           </ul>
 
           <div className={styles.sectionTitle}>Acciones</div>
@@ -271,9 +274,25 @@ const Sidebar = () => {
             <input className={styles.inputSubirProducto} placeholder="Descripción (opcional)" value={sponsorDesc} onChange={(e) => setSponsorDesc(e.target.value)} />
             <div className={styles.uploadSection}>
               <label>Imagen principal (PNG):</label>
-              <input type="file" accept="image/png" ref={sponsorImgRef} onChange={(e) => setSponsorImg(e.target.files[0])} />
+              <input
+                type="file"
+                accept="image/png"
+                ref={sponsorImgRef}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  const file = e.target.files?.[0];
+                  if (file) setSponsorImg(file);
+                }}
+              />
               <label>Logo (PNG):</label>
-              <input type="file" accept="image/png" ref={sponsorLogoRef} onChange={(e) => setSponsorLogo(e.target.files[0])} />
+              <input
+                type="file"
+                accept="image/png"
+                ref={sponsorLogoRef}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  const file = e.target.files?.[0];
+                  if (file) setSponsorLogo(file);
+                }}
+/>
             </div>
             <div className={styles.modalButtons}>
               <button onClick={handleSponsorUpload} disabled={uploading}>{uploading ? "Subiendo..." : "Agregar Sponsor"}</button>
