@@ -23,7 +23,7 @@ const Sidebar = () => {
   const [isSponsorModalOpen, setIsSponsorModalOpen] = useState(false);
   const [nombre, setNombre] = useState("");
   const [uploading, setUploading] = useState(false);
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [precio, setPrecio] = useState("");
   const [desc, setDesc] = useState("");
   const [useCustomTallas, setUseCustomTallas] = useState(false);
