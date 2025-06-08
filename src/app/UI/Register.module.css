@@ -96,3 +96,11 @@
 .loginLink a:hover {
   text-decoration: underline;
 }
+
+.successMessage {
+  color: #28a745;
+  font-size: 1.4rem;
+  font-weight: bold;
+  text-align: center;
+  margin: 1rem 0;
+}

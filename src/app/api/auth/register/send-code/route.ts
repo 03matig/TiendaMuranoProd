@@ -82,7 +82,7 @@ export async function POST(req: Request) {
 
       try {
         await resend.emails.send({
-          from: "noreply@clubmurano.cl",
+          from: "noreply@tiendadeportivamurano.cl",
           to: email,
           subject: "Tu código de verificación",
           html: emailHtml,
