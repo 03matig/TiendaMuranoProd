@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { EmailVerificationTemplate } from "@/lib/email-template/emailVerification";
 import { render } from "@react-email/render";
-import supabase from "@/lib/cs";
+import { getSupabase } from "@/lib/cs"; // Importar configuración de Supabase
 import { Resend } from "resend";
 import { randomInt } from "crypto";
 
@@ -19,6 +19,7 @@ export async function POST(req: Request) {
     }
 
     // 🔎 Buscar el usuario por email
+    const supabase = getSupabase();
     const { data: user, error: userError } = await supabase
       .from("users")
       .select("id")

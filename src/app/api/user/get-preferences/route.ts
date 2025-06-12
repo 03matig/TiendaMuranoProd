@@ -1,7 +1,7 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import supabase from "@/lib/cs";
+import { getSupabase } from "@/lib/cs"; // Importar configuración de Supabase
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -11,6 +11,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Falta el parámetro id" }, { status: 400 });
   }
 
+  const supabase = getSupabase();
   const { data, error } = await supabase
     .from("users")
     .select("recibir_correos, recibir_promociones, tema_oscuro")

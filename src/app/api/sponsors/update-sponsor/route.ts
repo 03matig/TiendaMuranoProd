@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import supabase from "@/lib/cs"; // Asegúrate de importar la configuración de Supabase
+import { getSupabase } from "@/lib/cs"; // Importar configuración de Supabase
 
 export async function PUT(req: Request) {
   try {
@@ -10,7 +10,7 @@ export async function PUT(req: Request) {
     if (!id_sponsor) {
       return NextResponse.json({ error: "Falta el id_sponsor" }, { status: 400 });
     }
-
+    const supabase = getSupabase();
     const { error } = await supabase
       .from("sponsors")
       .update({

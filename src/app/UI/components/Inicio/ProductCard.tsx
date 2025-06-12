@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styles from "./ProductCard.module.css";
-import supabase from "@/lib/cs"; // 🔹 Importar la configuración de Supabase
+import { getSupabase } from "@/lib/cs"; // 🔹 Importar configuración de Supabase
 
 type Product = {
   id_prenda: string;
@@ -22,6 +22,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
+      const supabase = getSupabase();
       setLoading(true);
 
       // 🔹 Obtiene productos desde Supabase (puedes filtrar por destacados si tienes una columna específica)

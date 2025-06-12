@@ -1,7 +1,7 @@
 "use server";
 
 import { NextRequest, NextResponse } from "next/server";
-import supabase from "@/lib/cs";
+import { getSupabase } from "@/lib/cs"; // 🔹 Importar configuración de Supabase
 import { verifyToken } from "@/lib/verifyToken";
 
 const ESTADOS_VALIDOS = ["Pendiente", "Procesado", "En Reparto", "Entregado"];
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
+    const supabase = getSupabase();
     const { error } = await supabase
       .from("pedidos")
       .update({ estado: nuevo_estado })

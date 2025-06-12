@@ -1,11 +1,12 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import supabase from "@/lib/cs"; // Asegúrate de importar la configuración de Supabase
+import { getSupabase } from "@/lib/cs"; // Importar configuración de Supabase
 
 export async function GET() {
   try {
     // 🔹 Visualizar pedidos singularmente
+    const supabase = getSupabase();
     const { data: sponsors, error } = await supabase
       .from("sponsors")
       .select("*")

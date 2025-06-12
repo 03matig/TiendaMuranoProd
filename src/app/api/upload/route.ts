@@ -1,9 +1,9 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import supabase from "@/lib/cs";
 import path from "path";
 import fs from "fs/promises";
+import { getSupabase } from "@/lib/cs"; // 🔹 Importar configuración de Supabase
 
 export async function POST(req: Request) {
   try {
@@ -37,6 +37,7 @@ export async function POST(req: Request) {
     }
 
     // 🔹 Verificar si el usuario tiene permisos
+    const supabase = getSupabase();
     const { data: userData, error: userError } = await supabase
       .from("users")
       .select("role")

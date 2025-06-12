@@ -1,7 +1,7 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import supabase from "@/lib/cs";
+import { getSupabase } from "@/lib/cs"; // Importar configuración de Supabase
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   if (!id) {
     return NextResponse.json({ error: "Falta el ID de usuario" }, { status: 400 });
   }
-
+  const supabase = getSupabase();
   const { error } = await supabase
     .from("users")
     .update({

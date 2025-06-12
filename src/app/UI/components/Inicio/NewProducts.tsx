@@ -8,7 +8,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import ProductCard from "./ProductCard";
 import styles from "./NewProducts.module.css";
-import supabase from "@/lib/cs"; // 🔹 Importar configuración de Supabase
+import { getSupabase } from "@/lib/cs"; // 🔹 Importar configuración de Supabase
 
 type Product = {
   id_prenda: string;
@@ -26,6 +26,7 @@ const NewProducts = ({ displayOption = "grid" }) => {
 
   useEffect(() => {
     const fetchNewProducts = async () => {
+      const supabase = getSupabase();
       setLoading(true);
 
       // 🔹 Consulta productos nuevos desde Supabase (puedes filtrar por fecha si tienes una columna para ello)

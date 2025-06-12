@@ -8,8 +8,8 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import ProductCard from "./ProductCard";
 import styles from "./FeaturedProducts.module.css";
-import { useRouter } from "next/router";
-import supabase from "@/lib/cs";
+import { useRouter } from "next/navigation";
+import { getSupabase } from "@/lib/cs"; // 🔹 Importar configuración de Supabase
 
 type Product = {
   id_prenda: string;
@@ -29,6 +29,7 @@ const FeaturedProducts = ({ displayOption = "grid" }) => {
 
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
+      const supabase = getSupabase();
       setLoading(true);
 
       // 🔹 Obtiene productos desde Supabase (puedes filtrar por destacados si tienes una columna específica)

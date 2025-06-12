@@ -1,7 +1,7 @@
 "use server";
 
 import { NextRequest, NextResponse } from "next/server";
-import supabase from "@/lib/cs";
+import { getSupabase } from "@/lib/cs"; // 🔹 Importar configuración de Supabase
 import { verifyToken } from "@/lib/verifyToken";
 
 export async function GET(req: NextRequest) {
@@ -11,6 +11,7 @@ export async function GET(req: NextRequest) {
     verifyToken(authHeader);
 
     // ✅ Token válido → ejecutar lógica segura
+    const supabase = getSupabase();
     const { count, error } = await supabase
       .from("pedidos")
       .select("*", { count: "exact", head: true })

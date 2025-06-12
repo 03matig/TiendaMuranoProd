@@ -1,7 +1,7 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import supabase from "@/lib/cs";
+import { getSupabase } from "@/lib/cs"; // Importar configuración de Supabase
 
 export async function GET(req: Request) {
   try {
@@ -11,7 +11,7 @@ export async function GET(req: Request) {
     if (!idCliente) {
       return NextResponse.json({ error: "Falta el parámetro id" }, { status: 400 });
     }
-
+    const supabase = getSupabase();
     const { data, error } = await supabase
       .from("pedidos")
       .select("*")

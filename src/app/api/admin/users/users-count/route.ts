@@ -1,10 +1,12 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import supabase from "@/lib/cs"; // Asegúrate de importar correctamente tu conexión
+import { getSupabase } from "@/lib/cs"; // Importar configuración de Supabase
+import { verifyToken } from "@/lib/verifyToken";
 
 export async function GET() {
   try {
+    const supabase = getSupabase();
     const { count, error } = await supabase
       .from("users")
       .select("*", { count: "exact", head: true });

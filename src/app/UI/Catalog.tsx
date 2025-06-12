@@ -7,7 +7,7 @@ import ProductCard from "./components/Catalogo/ProductCard";
 import Filters from "./components/Catalogo/Filters";
 import Footer from "./components/Footer";
 import styles from "./Catalog.module.css";
-import supabase from "@/lib/cs"; // 🔹 Importar configuración de Supabase
+import { getSupabase } from "@/lib/cs"; // 🔹 Importar configuración de Supabase
 
 type Product = {
   id_prenda: string;
@@ -28,6 +28,7 @@ const Catalog = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      const supabase = getSupabase();
       setLoading(true);
       const { data, error } = await supabase.from("stock").select("*");
 

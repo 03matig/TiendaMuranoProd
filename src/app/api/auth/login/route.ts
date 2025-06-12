@@ -3,7 +3,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import supabase from "@/lib/cs";
+import { getSupabase } from "@/lib/cs"; // Importar configuración de Supabase
 
 const JWT_SECRET = process.env.JWT_SECRET || "murano_super_secreto"; // 🔐 Usa variable de entorno en producción
 const JWT_EXPIRES_IN = "2h"; // Puedes ajustar duración del token aquí
@@ -17,6 +17,7 @@ export async function POST(req: Request) {
     }
 
     // 🔎 Buscar el usuario por email
+    const supabase = getSupabase();
     const { data: user, error } = await supabase
       .from("users")
       .select("id, name, email, pw, role")

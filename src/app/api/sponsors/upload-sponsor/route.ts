@@ -1,7 +1,7 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import supabase from "@/lib/cs";
+import { getSupabase } from "@/lib/cs"; // Importar configuración de Supabase
 
 export async function POST(req: Request) {
     try {
@@ -22,6 +22,7 @@ export async function POST(req: Request) {
       const nombreArchivoLogo = `sponsors/Activos/Logo/${timestamp}-${logo.name}`;
   
       // 🔼 Subir imagen principal
+      const supabase = getSupabase();
       const { error: errorImagen } = await supabase.storage
         .from("sponsors")
         .upload(nombreArchivoImagen, imagen, {
