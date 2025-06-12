@@ -1,13 +1,22 @@
 import React, { useState } from "react";
 import styles from "./Filters.module.css";
 
-const Filters = ({ setFilteredProducts }) => {
-  const [priceFilter, setPriceFilter] = useState("");
+type Product = {
+  id_prenda: string;
+  nombre: string;
+  precio: number;
+  nombre_archivo: string;
+  tallas: string[];
+  descripcion?: string;
+};
+
+const Filters = ({ setFilteredProducts }: { setFilteredProducts: React.Dispatch<React.SetStateAction<Product[]>> }) => {
+  const [priceFilter, setPriceFilter] = useState<number | null>(null);
 
   const handleFilterChange = () => {
     // Simulación de filtrado (reemplazar con lógica real)
     setFilteredProducts((prevProducts) =>
-      prevProducts.filter((product) => (priceFilter ? product.price <= priceFilter : true))
+      prevProducts.filter((product) => (priceFilter ? product.precio <= priceFilter : true))
     );
   };
 
@@ -31,7 +40,10 @@ const Filters = ({ setFilteredProducts }) => {
         type="number"
         className={styles.input}
         placeholder="Máximo $"
-        onChange={(e) => setPriceFilter(e.target.value)}
+        onChange={(e) => {
+          const value = e.target.value;
+          setPriceFilter(value !== "" ? parseInt(value, 10) : null);
+        }}
       />
     </aside>
   );
