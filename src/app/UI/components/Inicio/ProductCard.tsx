@@ -4,8 +4,18 @@ import { useRouter } from "next/navigation";
 import styles from "./ProductCard.module.css";
 import supabase from "@/lib/cs"; // 🔹 Importar la configuración de Supabase
 
-const ProductCard = ({ product }) => {
-  const [products, setProducts] = useState([]);
+type Product = {
+  id_prenda: string;
+  nombre: string;
+  precio: number;
+  nombre_archivo: string;
+  tallas: string[];
+  descripcion?: string;
+  imagen: string; // URL completa desde Supabase
+};
+
+const ProductCard = ({ product }: { product: Product }) => {
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
@@ -33,10 +43,10 @@ const ProductCard = ({ product }) => {
     fetchFeaturedProducts();
   }, []);
   // 🔹 Manejar el clic en una ProductCard
-  const handleProductClick = (product) => {
+  const handleProductClick = (product: Product) => {
     console.log("Producto clickeado:", product);
     router.push(
-      `/Vistas/product/${product.id_prenda}?image=${encodeURIComponent(product.nombre_archivo)}&name=${encodeURIComponent(product.nombre)}&desc=${encodeURIComponent(product.descripcion)}&price=${product.precio}&sizes=${encodeURIComponent(product.tallas ? product.tallas.join(",") : "")}`
+      `/Vistas/product/${product.id_prenda}?image=${encodeURIComponent(product.nombre_archivo)}&name=${encodeURIComponent(product.nombre)}&desc=${encodeURIComponent(product.descripcion || "")}&price=${product.precio}&sizes=${encodeURIComponent(product.tallas ? product.tallas.join(",") : "")}`
     );
   };
 

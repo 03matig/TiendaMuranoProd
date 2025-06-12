@@ -11,9 +11,20 @@ import styles from "./FeaturedProducts.module.css";
 import { useRouter } from "next/router";
 import supabase from "@/lib/cs";
 
+type Product = {
+  id_prenda: string;
+  nombre: string;
+  precio: number;
+  nombre_archivo: string;
+  tallas: string[];
+  descripcion?: string;
+  imagen: string; // URL completa desde Supabase
+};
+
+
 const FeaturedProducts = ({ displayOption = "grid" }) => {
-  const router = useRouter;
-  const [products, setProducts] = useState([]);
+  const router = useRouter();
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -40,9 +51,9 @@ const FeaturedProducts = ({ displayOption = "grid" }) => {
   }, []);
 
   // 🔹 Manejar el clic en una ProductCard
-  const handleProductClick = (product) => {
+  const handleProductClick = (product: Product) => {
     router.push(
-      `/Vistas/product/${product.id_prenda}?image=${encodeURIComponent(product.nombre_archivo)}&name=${encodeURIComponent(product.nombre)}&desc=${encodeURIComponent(product.descripcion)}&price=${product.precio}&sizes=${encodeURIComponent(product.tallas ? product.tallas.join(",") : "")}`
+      `/Vistas/product/${product.id_prenda}?image=${encodeURIComponent(product.nombre_archivo)}&name=${encodeURIComponent(product.nombre)}&desc=${encodeURIComponent(product.descripcion || "")}&price=${product.precio}&sizes=${encodeURIComponent(product.tallas ? product.tallas.join(",") : "")}`
     );
   };
 

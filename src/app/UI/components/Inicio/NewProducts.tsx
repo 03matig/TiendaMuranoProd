@@ -10,8 +10,18 @@ import ProductCard from "./ProductCard";
 import styles from "./NewProducts.module.css";
 import supabase from "@/lib/cs"; // 🔹 Importar configuración de Supabase
 
+type Product = {
+  id_prenda: string;
+  nombre: string;
+  precio: number;
+  nombre_archivo: string;
+  tallas: string[];
+  descripcion?: string;
+  imagen: string; // URL completa desde Supabase
+};
+
 const NewProducts = ({ displayOption = "grid" }) => {
-  const [newProducts, setNewProducts] = useState([]);
+  const [newProducts, setNewProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
