@@ -28,7 +28,12 @@ export default function OrdersView() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await fetch("/api/admin/orders/view-orders");
+        const token = localStorage.getItem("murano_token");
+        const res = await fetch("/api/admin/orders/view-orders", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const json = await res.json();
         setOrders(json.pedidos);
       } catch (error) {
@@ -49,9 +54,13 @@ export default function OrdersView() {
   const confirmarCambioEstado = async () => {
     if (!pedidoSeleccionado) return;
     try {
+      const token = localStorage.getItem("murano_token");
       const res = await fetch("/api/admin/orders/update-order-status", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
           id_pedido: pedidoSeleccionado.id_pedido,
           nuevo_estado: estadoSeleccionado,

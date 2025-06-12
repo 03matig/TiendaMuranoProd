@@ -1,11 +1,17 @@
+"use server";
+
 import { NextRequest, NextResponse } from "next/server";
 import supabase from "@/lib/cs";
+import { verifyToken } from "@/lib/verifyToken";
 
-// Lista blanca de estados válidos según la restricción CHECK
 const ESTADOS_VALIDOS = ["Pendiente", "Procesado", "En Reparto", "Entregado"];
 
 export async function POST(req: NextRequest) {
   try {
+    // 🔐 Verificación del token desde header Authorization
+    const authHeader = req.headers.get("authorization") ?? undefined;
+    verifyToken(authHeader); // Lanza error si no es válido
+
     const { id_pedido, nuevo_estado } = await req.json();
 
     if (!id_pedido || !nuevo_estado) {
@@ -38,10 +44,11 @@ export async function POST(req: NextRequest) {
       { message: "Estado del pedido actualizado correctamente." },
       { status: 200 }
     );
-  } catch (error) {
+
+  } catch (error: any) {
     return NextResponse.json(
-      { error: "Error del servidor al procesar la solicitud." },
-      { status: 500 }
+      { error: error.message || "Error del servidor al procesar la solicitud." },
+      { status: 401 }
     );
   }
 }

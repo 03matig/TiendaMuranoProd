@@ -10,51 +10,49 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-  
     setLoading(true);
+
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+        body: JSON.stringify({ email, password }),
       });
-  
+
       const data = await response.json();
-  
+
       if (!response.ok) {
         throw new Error(data.error || "Error al iniciar sesión");
       }
-  
-      // ✅ Almacenar los datos del usuario en localStorage
+
+      // ✅ Almacenar el token JWT en localStorage
+      localStorage.setItem("murano_token", data.token);
+
+      // ✅ Almacenar también los datos del usuario
       localStorage.setItem("user", JSON.stringify({
         id: data.user.id,
         name: data.user.name,
         email: data.user.email,
         role: data.user.role,
-        avatar: "/images/default-avatar.png" // 🔹 Aquí puedes usar una URL real si la tienes
+        avatar: "/images/default-avatar.png"
       }));
-  
-      // ✅ Redirigir al usuario a la página principal
+
+      // 🔁 Redirigir al home (o al dashboard si es admin, según tu lógica)
       router.push("/");
-  
+
     } catch (error: any) {
       setError(error.message);
     } finally {
       setLoading(false);
     }
   };
-  
-  
 
   return (
     <div className={styles.loginContainer}>
@@ -71,7 +69,7 @@ const LoginForm = () => {
       {/* Capa oscura sobre la imagen */}
       <div className={styles.overlay}></div>
 
-      {/* 🔥 Caja del formulario (debe estar después de la capa oscura) */}
+      {/* Formulario */}
       <div className={styles.loginBox}>
         <h2>Iniciar Sesión</h2>
         <form onSubmit={handleSubmit}>
@@ -92,13 +90,15 @@ const LoginForm = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button className={styles.button} type="submit">Ingresar</button>
+          <button className={styles.button} type="submit">
+            {loading ? "Cargando..." : "Ingresar"}
+          </button>
         </form>
         <p className={styles.registerLink}>
           ¿No tienes cuenta? <a href="/Vistas/register">Regístrate aquí</a>
         </p>
         <p className={styles.registerLink}>
-            <a href="/"> Regresar a la Página Principal </a>
+          <a href="/"> Regresar a la Página Principal </a>
         </p>
       </div>
     </div>

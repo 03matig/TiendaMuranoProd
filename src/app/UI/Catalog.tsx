@@ -9,9 +9,19 @@ import Footer from "./components/Footer";
 import styles from "./Catalog.module.css";
 import supabase from "@/lib/cs"; // 🔹 Importar configuración de Supabase
 
+type Product = {
+  id_prenda: string;
+  nombre: string;
+  precio: number;
+  nombre_archivo: string;
+  tallas: string[];
+  descripcion?: string;
+};
+
+
 const Catalog = () => {
-  const [products, setProducts] = useState([]); // 🔹 Estado para los productos
-  const [filteredProducts, setFilteredProducts] = useState([]); // 🔹 Estado para los filtros
+  const [products, setProducts] = useState<Product[]>([]); // 🔹 Estado para los productos
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]); // 🔹 Estado para los filtros
   const [loading, setLoading] = useState(true);
   const router = useRouter(); // 🔹 Para redirigir al detalle del producto
 
@@ -34,7 +44,7 @@ const Catalog = () => {
   }, []);
 
   // 🔹 Manejar el clic en una ProductCard
-  const handleProductClick = (product) => {
+  const handleProductClick = (product: Product) => {
     router.push(
       `/Vistas/product/${product.id_prenda}?image=${encodeURIComponent(product.nombre_archivo)}&name=${encodeURIComponent(product.nombre)}&desc=${encodeURIComponent(product.descripcion)}&price=${product.precio}&sizes=${encodeURIComponent(product.tallas ? product.tallas.join(",") : "")}`
     );
