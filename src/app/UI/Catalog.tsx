@@ -16,6 +16,7 @@ type Product = {
   nombre_archivo: string;
   tallas: string[];
   descripcion?: string;
+  imagen: string; // URL completa desde Supabase
 };
 
 

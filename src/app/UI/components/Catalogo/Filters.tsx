@@ -8,6 +8,7 @@ type Product = {
   nombre_archivo: string;
   tallas: string[];
   descripcion?: string;
+  imagen: string; // URL completa desde Supabase
 };
 
 const Filters = ({ setFilteredProducts }: { setFilteredProducts: React.Dispatch<React.SetStateAction<Product[]>> }) => {
