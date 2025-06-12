@@ -5,9 +5,6 @@ import { getSupabase } from "@/lib/cs"; // Importar configuración de Supabase
 import { Resend } from "resend";
 import { randomInt } from "crypto";
 
-// 🔐 Instancia del servicio Resend
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req: Request) {
   try {
     const { email, method = "email" } = await req.json();
@@ -82,6 +79,8 @@ export async function POST(req: Request) {
       console.log("🧪 HTML generado para el correo:\n", emailHtml);
 
       try {
+        // 🔐 Instancia del servicio Resend
+        const resend = new Resend(process.env.RESEND_API_KEY);
         await resend.emails.send({
           from: "noreply@tiendadeportivamurano.cl",
           to: email,
