@@ -13,7 +13,8 @@ export async function POST(req: Request) {
     const precioStr = formData.get("precio") as string | null;
     const userId = formData.get("userId") as string | null;
     const desc = formData.get("desc") as string | null;
-    const tallasStr = formData.get("tallas")
+    const tallasRaw = formData.get("tallas");
+    const tallasStr = typeof tallasRaw === "string" ? tallasRaw : "";
 
     console.log("📌 Recibido en el backend:");
     console.log("Nombre:", nombre);
@@ -63,9 +64,7 @@ export async function POST(req: Request) {
     const descValue = desc && desc.trim() !== "" ? desc : null;
 
     // 🔹 Corregir el formato de `tallas`
-    const tallas = (tallasStr && tallasStr.trim() !== "") ? 
-    JSON.parse(tallasStr) : 
-    ["S", "M", "L", "XL"];
+    const tallas = tallasStr.trim() !== "" ? JSON.parse(tallasStr) : ["S", "M", "L", "XL"];
 
     // 🔹 Insertar producto en la base de datos `stock`
     const { data: stockData, error: stockError } = await supabase
