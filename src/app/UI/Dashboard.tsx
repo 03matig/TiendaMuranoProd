@@ -54,43 +54,58 @@ const Dashboard = () => {
     fetchUserCount();
   }, []);
 
-    // 🔹 Obtener la cantidad de productos desde la API
+  // 🔹 Obtener la cantidad de productos desde la API
+  useEffect(() => {
+    const fetchProductCount = async () => {
+      try {
+        const token = localStorage.getItem("murano_token");
+
+        const response = await fetch("/api/admin/products/products-count", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          setProductCount(data.count);
+        } else {
+          console.error("Error obteniendo productos:", data.error);
+        }
+      } catch (error) {
+        console.error("Error en la petición:", error);
+      }
+    };
+
+    fetchProductCount();
+  }, []);
+
+
+    // 🔹 Obtener la cantidad de pedidos pendientes desde la API
     useEffect(() => {
-      const fetchProductCount = async () => {
+      const fetchPendingOrders = async () => {
         try {
-          const response = await fetch("/api/admin/products/products-count");
+          const token = localStorage.getItem("murano_token");
+
+          const response = await fetch("/api/admin/orders/orders-pending", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
           const data = await response.json();
           if (response.ok) {
-            setProductCount(data.count);
+            setPendingOrders(data.count);
           } else {
-            console.error("Error obteniendo productos:", data.error);
+            console.error("Error obteniendo pedidos pendientes:", data.error);
           }
         } catch (error) {
           console.error("Error en la petición:", error);
         }
       };
-  
-      fetchProductCount();
-    }, []);
 
-      // 🔹 Obtener la cantidad de pedidos pendientes desde la API
-      useEffect(() => {
-        const fetchPendingOrders = async () => {
-          try {
-            const response = await fetch("/api/admin/orders/orders-pending");
-            const data = await response.json();
-            if (response.ok) {
-              setPendingOrders(data.count);
-            } else {
-              console.error("Error obteniendo pedidos pendientes:", data.error);
-            }
-          } catch (error) {
-            console.error("Error en la petición:", error);
-          }
-        };
-    
-        fetchPendingOrders();
-      }, []);
+      fetchPendingOrders();
+    }, []);
 
     // Visualizar los pedidos singularmente desde la API
     useEffect(() => {

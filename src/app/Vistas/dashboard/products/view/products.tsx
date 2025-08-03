@@ -28,13 +28,13 @@ export default function ProductsView() {
     const fetchProducts = async () => {
       try {
         const token = localStorage.getItem("murano_token");
-        const res = await fetch("/api/admin/products/products-count", {
+        const res = await fetch("/api/admin/products/view-products", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         const json = await res.json();
-        setProducts(json.products);
+        setProducts(json.products); // Ahora sí json.products estará definido
       } catch (error) {
         console.error("Error al cargar productos", error);
       } finally {
@@ -44,6 +44,7 @@ export default function ProductsView() {
 
     fetchProducts();
   }, []);
+
 
   const handleDisponibilidadChange = (product: Product, disponible: boolean) => {
     setProductoSeleccionado(product);
