@@ -55,6 +55,11 @@ export default function OrdersView() {
     if (!pedidoSeleccionado) return;
     try {
       const token = localStorage.getItem("murano_token");
+      if (!token) {
+        throw new Error("Token no encontrado");
+      }
+
+      // 🔹 Llamada a la API para actualizar el estado del pedido
       const res = await fetch("/api/admin/orders/update-order-status", {
         method: "POST",
         headers: {

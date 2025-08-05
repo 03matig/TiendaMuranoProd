@@ -1,12 +1,17 @@
 "use server";
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 import fs from "fs/promises";
-import { getSupabase } from "@/lib/cs"; // 🔹 Importar configuración de Supabase
+import { getSupabase } from "@/lib/cs";
+import { verifyToken } from "@/lib/verifyToken";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    // ✅ Verificar token JWT desde el header
+    const authHeader = req.headers.get("authorization") ?? undefined;
+    verifyToken(authHeader); // Lanza error si es inválido
+
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
     const nombre = formData.get("nombre") as string | null;
@@ -49,22 +54,16 @@ export async function POST(req: Request) {
     }
 
     // 🔹 Guardar imagen en `public/images/Productos/Nuevos/`
-    // 🔹 Generar un nombre de archivo basado en el nombre original (sanitizado)
-    const originalFileName = path.parse(file.name).name; // 🔹 Extraer el nombre sin la extensión
-    const sanitizedFileName = originalFileName.replace(/[^a-zA-Z0-9-_]/g, "_"); // 🔹 Remover caracteres problemáticos
-    const fileName = `${sanitizedFileName}.png`; // 🔹 Mantener la extensión PNG
+    const originalFileName = path.parse(file.name).name;
+    const sanitizedFileName = originalFileName.replace(/[^a-zA-Z0-9-_]/g, "_");
+    const fileName = `${sanitizedFileName}.png`;
     const filePath = path.join(process.cwd(), "public/images/Productos/Nuevos", fileName);
-    
+
     const buffer = Buffer.from(await file.arrayBuffer());
     await fs.writeFile(filePath, buffer);
 
-    // 🔹 Ruta relativa para la base de datos
     const relativePath = `Productos/Nuevos/${fileName}`;
-
-    // 🔹 Si `desc` está vacío, lo convertimos a null
     const descValue = desc && desc.trim() !== "" ? desc : null;
-
-    // 🔹 Corregir el formato de `tallas`
     const tallas = tallasStr.trim() !== "" ? JSON.parse(tallasStr) : ["S", "M", "L", "XL"];
 
     // 🔹 Insertar producto en la base de datos `stock`
@@ -84,7 +83,15 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ message: "Producto agregado al stock con éxito!", imagePath: relativePath }, { status: 201 });
 
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message === "Token no enviado") {
+      return NextResponse.json({ error: error.message }, { status: 401 });
+    }
+
+    if (error.message === "Token inválido o expirado") {
+      return NextResponse.json({ error: error.message }, { status: 403 });
+    }
+
     console.error("❌ Error en el servidor:", error);
     return NextResponse.json({ error: "Error en el servidor" }, { status: 500 });
   }

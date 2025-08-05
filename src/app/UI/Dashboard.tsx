@@ -39,7 +39,16 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchUserCount = async () => {
       try {
-        const response = await fetch("/api/admin/users/users-count");
+        const token = localStorage.getItem("murano_token");
+        if (!token) {
+          throw new Error("Token no encontrado");
+        }
+
+        const response = await fetch("/api/admin/users/users-count", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
         const data = await response.json();
         if (response.ok) {
           setUserCount(data.count);
@@ -59,6 +68,9 @@ const Dashboard = () => {
     const fetchProductCount = async () => {
       try {
         const token = localStorage.getItem("murano_token");
+        if (!token) {
+          throw new Error("Token no encontrado");
+        }
 
         const response = await fetch("/api/admin/products/products-count", {
           headers: {
@@ -86,7 +98,10 @@ const Dashboard = () => {
       const fetchPendingOrders = async () => {
         try {
           const token = localStorage.getItem("murano_token");
-
+          if (!token) {
+            throw new Error("Token no encontrado");
+          }
+          // 🔹 Llamada a la API para obtener el conteo de pedidos pendientes
           const response = await fetch("/api/admin/orders/orders-pending", {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -111,7 +126,17 @@ const Dashboard = () => {
     useEffect(() => {
       const fetchPendingOrdersDetails = async () => {
         try {
-          const response = await fetch("/api/admin/orders/view-orders");
+          const token = localStorage.getItem("murano_token");
+          if (!token) {
+            throw new Error("Token no encontrado");
+          }
+
+          // 🔹 Llamada a la API para obtener los detalles de los pedidos pendientes
+          const response = await fetch("/api/admin/orders/view-orders", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
           const datadetails = await response.json();
           if (response.ok) {
             setPendingOrdersDetails(datadetails);

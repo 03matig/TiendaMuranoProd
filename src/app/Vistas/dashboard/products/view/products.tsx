@@ -45,7 +45,6 @@ export default function ProductsView() {
     fetchProducts();
   }, []);
 
-
   const handleDisponibilidadChange = (product: Product, disponible: boolean) => {
     setProductoSeleccionado(product);
     setDisponibilidadSeleccionada(disponible);

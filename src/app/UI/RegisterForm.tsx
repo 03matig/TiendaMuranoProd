@@ -36,8 +36,8 @@ const RegisterForm = () => {
         <Image
           src="/images/UI/Foto2.png"
           alt="Fondo Registro"
-          layout="fill"
-          objectFit="cover"
+          fill
+          style={{ objectFit: "cover" }}
         />
       </div>
 

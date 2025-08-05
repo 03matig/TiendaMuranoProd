@@ -61,8 +61,8 @@ const LoginForm = () => {
         <Image 
           src="/images/UI/Foto2.png" 
           alt="Fondo Login" 
-          layout="fill" 
-          objectFit="cover" 
+          fill
+          style={{ objectFit: "cover" }} 
         />
       </div>
 

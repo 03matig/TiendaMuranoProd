@@ -44,8 +44,8 @@ const BannerCarousel = () => {
               <Image
                 src={banner.image}
                 alt="Banner"
-                layout="fill"
-                objectFit="contain"
+                fill
+                style={{ objectFit: "contain" }}
                 className={styles.image}
               />
               <div className={styles.overlay}>

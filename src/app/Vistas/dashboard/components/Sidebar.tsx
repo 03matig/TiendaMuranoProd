@@ -91,7 +91,17 @@ const Sidebar = () => {
     const tallasToSend = useCustomTallas ? JSON.stringify(tallas) : "";
     formData.append("tallas", tallasToSend);
 
+    const token = localStorage.getItem("murano_token");
+    if (!token) {
+      alert("Token no encontrado. Por favor, inicia sesión nuevamente.");
+      setUploading(false);
+      return;
+    }
+
     const response = await fetch("/api/upload", {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      },
       method: "POST",
       body: formData,
     });
