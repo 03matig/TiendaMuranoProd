@@ -5,12 +5,16 @@ import { useCart } from "@/context/CartContext"; // 🔹 Importamos el contexto 
 import styles from "./Cart.module.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-
+import { useRouter } from "next/navigation"; // 🔹 Para redirigir al pago
 const Cart = () => {
   const { cart, removeFromCart, clearCart, updateQuantity } = useCart(); // 🔹 Extraemos funciones del contexto
-
+  const router = useRouter(); // 🔹 Para redirigir al pago
   // Calcular total
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+  function handleNavigateToCheckout() {
+    router.push("/Vistas/cart/cotizarPago");
+  }
 
   return (
     <>
@@ -31,9 +35,9 @@ const Cart = () => {
                       <p className={styles.itemName}>{item.name}</p>
                       <p className={styles.itemPrice}>${item.price.toLocaleString()} CLP</p>
                       <div className={styles.quantityControls}>
-                        <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
+                        <button className={styles.quantityButton} onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
                         <span>{item.quantity}</span>
-                        <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+                        <button className={styles.quantityButton} onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
                       </div>
                       <button className={styles.removeButton} onClick={() => removeFromCart(item.id)}>
                         Eliminar
@@ -45,7 +49,7 @@ const Cart = () => {
 
               <div className={styles.cartSummary}>
                 <h3>Total: ${total.toLocaleString()} CLP</h3>
-                <button className={styles.checkoutButton}>Ir a pagar</button>
+                <button className={styles.checkoutButton} onClick={handleNavigateToCheckout}>Ir a pagar</button>
                 <button className={styles.clearCartButton} onClick={clearCart}>
                   Vaciar carrito
                 </button>

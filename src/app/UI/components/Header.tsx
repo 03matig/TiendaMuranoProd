@@ -133,25 +133,33 @@ const Header = () => {
                 {cart.length === 0 ? (
                   <p>Tu carrito está vacío.</p>
                 ) : (
-                  cart.map((item) => (
-                    <div key={item.id} className={styles.cartItem}>
-                      <Image
-                        src={item.imageName}
-                        alt={item.name}
-                        width={50}
-                        height={50}
-                      />
-                      <div>
-                        <p>{item.name}</p>
-                        <p>${item.price.toLocaleString()} CLP</p>
-                        <div className={styles.quantityControls}>
-                          <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
-                          <span>{item.quantity}</span>
-                          <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+                  cart.map((item, index) => (
+                    <React.Fragment key={item.id}>
+                      <div className={styles.cartItem}>
+                        <Image
+                          src={item.imageName}
+                          alt={item.name}
+                          width={50}
+                          height={50}
+                        />
+                        <div>
+                          <p>{item.name}</p>
+                          <p>${item.price.toLocaleString()} CLP</p>
+                          <div className={styles.quantityControls}>
+                            <button className={styles.quantityButton} onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
+                            <span>{item.quantity}</span>
+                            <button className={styles.quantityButton} onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+                          </div>
+                          <button
+                            className={styles.removeButton}
+                            onClick={() => removeFromCart(item.id)}
+                          >
+                            Eliminar
+                          </button>
                         </div>
-                        <button onClick={() => removeFromCart(item.id)}>Eliminar</button>
                       </div>
-                    </div>
+                      {index !== cart.length - 1 && <hr className={styles.divider} />}
+                    </React.Fragment>
                   ))
                 )}
                 <hr className={styles.divider} />
@@ -161,7 +169,6 @@ const Header = () => {
               </div>
             )}
           </div>
-
         </div>
       </div>
 
