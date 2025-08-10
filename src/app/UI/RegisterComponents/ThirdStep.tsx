@@ -11,7 +11,7 @@ export default function ThirdStep({ formData, setFormData, onNext, onBack }: any
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const selectedRegion = formData.region;
+    const selectedRegion = formData.region as keyof typeof direcciones;
     if (selectedRegion && direcciones[selectedRegion]) {
       setCiudades(Object.keys(direcciones[selectedRegion]));
     } else {
@@ -21,10 +21,12 @@ export default function ThirdStep({ formData, setFormData, onNext, onBack }: any
   }, [formData.region]);
 
   useEffect(() => {
-    const selectedRegion = formData.region;
-    const selectedCity = formData.ciudad;
+    const selectedRegion = formData.region as keyof typeof direcciones;
+    const selectedCity = formData.ciudad as keyof typeof direcciones[typeof selectedRegion];
+
     if (
       selectedRegion &&
+      selectedCity &&
       direcciones[selectedRegion] &&
       direcciones[selectedRegion][selectedCity]
     ) {
@@ -32,6 +34,7 @@ export default function ThirdStep({ formData, setFormData, onNext, onBack }: any
     } else {
       setComunas([]);
     }
+
     setFormData((prev: any) => ({ ...prev, comuna: "" }));
   }, [formData.ciudad]);
 

@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Merchandising Murano",
+  title: "Tienda Deportiva Murano",
   description: "Tienda oficial del club Murano",
 };
 
@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
-        <title>Merchandising Murano</title>
+        <title>Tienda Deportiva Murano</title>
         <link rel="icon" href="/images/UI/LogoMurano.png" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>

@@ -1,7 +1,7 @@
 // app/api/auth/register/verify-code/route.ts
 
 import { NextResponse } from "next/server";
-import supabase from "@/lib/cs";
+import { getSupabase } from "@/lib/cs"; // Importar configuración de Supabase
 
 export async function POST(req: Request) {
   try {
@@ -12,6 +12,7 @@ export async function POST(req: Request) {
     }
 
     // 🔍 Buscar el usuario por correo
+    const supabase = getSupabase();
     const { data: user, error: userError } = await supabase
       .from("users")
       .select("id")

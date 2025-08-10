@@ -1,7 +1,7 @@
 // app/api/auth/register/set-personal-data/route.ts
 
 import { NextResponse } from "next/server";
-import supabase from "@/lib/cs";
+import { getSupabase } from "@/lib/cs"; // Importar configuración de Supabase
 
 export async function POST(req: Request) {
   try {
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       console.error("❌ Campos obligatorios faltantes");
       return NextResponse.json({ error: "Faltan campos obligatorios" }, { status: 400 });
     }
-
+    const supabase = getSupabase();
     const { data, error } = await supabase.from("delivery").insert([{
       user_id,
       full_name: fullName,

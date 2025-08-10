@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import supabase from "@/lib/cs";
+import { getSupabase } from "@/lib/cs"; // Importar configuración de Supabase
 
 export async function POST(req: Request) {
   try {
@@ -10,6 +10,7 @@ export async function POST(req: Request) {
     }
 
     // 🔎 Buscar usuario por email
+    const supabase = getSupabase();
     const { data: user, error: userError } = await supabase
       .from("users")
       .select("id")

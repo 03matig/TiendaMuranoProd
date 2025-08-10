@@ -15,15 +15,14 @@ const ProductDetail = () => {
   const sizesParam = searchParams.get("sizes");
   const product = {
     id: searchParams.get("id") ?? crypto.randomUUID(),
-    name: searchParams.get("name"),
-    description: searchParams.get("desc"),
-    price: searchParams.get("price"),
+    name: searchParams.get("name") ?? "Producto sin nombre",
+    description: searchParams.get("desc") ?? "",
+    price: parseFloat(searchParams.get("price") ?? "0"),
     imageName: `/images/${searchParams.get("image")}`,
     sizes: sizesParam ? sizesParam.split(",") : [],
   };
 
-
-  if (!product.imageName || !product.name || !product.description || !product.price) {
+  if (!product.imageName || !product.name || isNaN(product.price) || product.price <= 0) {
     return <p>Producto no encontrado.</p>;
   }
 
@@ -35,7 +34,7 @@ const ProductDetail = () => {
           {/* Imagen del producto */}
           <div className={styles.imageContainer}>
             <Image
-              src={product.imageName} // 🔹 Usa la ruta de `nombre_archivo`
+              src={product.imageName}
               alt={product.name}
               width={400}
               height={400}
@@ -47,8 +46,12 @@ const ProductDetail = () => {
           {/* Información del producto */}
           <div className={styles.detailsContainer}>
             <h1>{product.name}</h1>
-            <p className={styles.description}>{product.description}</p>
-            <p className={styles.price}>${parseInt(product.price).toLocaleString()} CLP</p>
+            <p className={styles.description}>
+              {product.description.trim() ? product.description : "Sin descripción disponible."}
+            </p>
+            <p className={styles.price}>
+              ${product.price.toLocaleString()} CLP
+            </p>
 
             {/* Dropdown para cantidad */}
             <label className={styles.label}>Cantidad:</label>
@@ -72,7 +75,7 @@ const ProductDetail = () => {
 
             {/* Botón para añadir al carrito */}
             <button className={styles.addToCartButton} onClick={() => {
-              if (!product.name || !product.description || !product.price) {
+              if (!product.name || isNaN(product.price) || product.price <= 0) {
                 alert("Faltan datos del producto");
                 return;
               }
@@ -81,7 +84,7 @@ const ProductDetail = () => {
                 id: product.id,
                 name: product.name,
                 description: product.description,
-                price: parseFloat(product.price), // Paso 2: asegurar número
+                price: product.price,
                 imageName: product.imageName,
                 sizes: product.sizes,
                 quantity: 1

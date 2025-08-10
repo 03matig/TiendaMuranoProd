@@ -1,7 +1,7 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import supabase from "@/lib/cs";
+import { getSupabase } from "@/lib/cs"; // Importar configuración de Supabase
 import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     if (!userId || !oldPassword || !newPassword) {
       return NextResponse.json({ error: "Faltan datos" }, { status: 400 });
     }
-
+    const supabase = getSupabase();
     const { data: user, error: fetchError } = await supabase
       .from("users")
       .select("password")

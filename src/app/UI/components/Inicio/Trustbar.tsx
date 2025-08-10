@@ -5,8 +5,8 @@ const Trustbar = () => {
   return (
     <div className={styles.trustbar}>
       <div>
-        <h3>Envío Gratis</h3>
-        <p>Obtén tus productos despachados gratuitamente sobre $50.</p>
+        <h3>Elige el método de envío</h3>
+        <p>Tenemos múltiples opciones de envío externalizado para que elijas la opción más económica.</p>
       </div>
       <div>
         <h3>Pagos Seguros</h3>

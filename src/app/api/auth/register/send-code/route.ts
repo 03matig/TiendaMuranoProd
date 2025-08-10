@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server";
 import { EmailVerificationTemplate } from "@/lib/email-template/emailVerification";
 import { render } from "@react-email/render";
-import supabase from "@/lib/cs";
+import { getSupabase } from "@/lib/cs"; // Importar configuración de Supabase
 import { Resend } from "resend";
 import { randomInt } from "crypto";
-
-// 🔐 Instancia del servicio Resend
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
   try {
@@ -19,6 +16,7 @@ export async function POST(req: Request) {
     }
 
     // 🔎 Buscar el usuario por email
+    const supabase = getSupabase();
     const { data: user, error: userError } = await supabase
       .from("users")
       .select("id")
@@ -81,6 +79,8 @@ export async function POST(req: Request) {
       console.log("🧪 HTML generado para el correo:\n", emailHtml);
 
       try {
+        // 🔐 Instancia del servicio Resend
+        const resend = new Resend(process.env.RESEND_API_KEY);
         await resend.emails.send({
           from: "noreply@tiendadeportivamurano.cl",
           to: email,

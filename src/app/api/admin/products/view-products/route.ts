@@ -1,10 +1,16 @@
 "use server";
 
-import { NextResponse } from "next/server";
-import supabase from "@/lib/cs"; // Asegúrate de importar la configuración de Supabase
+import { NextRequest, NextResponse } from "next/server";
+import { getSupabase } from "@/lib/cs"; // 🔹 Importar configuración de Supabase
+import { verifyToken } from "@/lib/verifyToken";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    // 🔐 Verificar token desde el header Authorization
+    const authHeader = req.headers.get("authorization") ?? undefined;
+    verifyToken(authHeader); // Lanza error si está ausente o inválido
+    
+    const supabase = getSupabase();
     // 🔹 Visualizar pedidos singularmente
     const { data: products, error } = await supabase
       .from("stock")

@@ -46,7 +46,7 @@ export function EmailVerificationTemplate({ code, userName }: EmailVerificationT
           <Text style={text}>Tu código de verificación es:</Text>
 
           <Section style={codeContainer}>
-            <Text style={code}>{code}</Text>
+            <Text style={codeStyle}>{code}</Text>
           </Section>
 
           <Text style={text}>
@@ -73,6 +73,13 @@ export function EmailVerificationTemplate({ code, userName }: EmailVerificationT
 const main = {
   backgroundColor: "#f6f9fc",
   fontFamily: "Arial, sans-serif",
+};
+
+const codeStyle = {
+  fontSize: "32px",
+  fontWeight: "bold",
+  color: "#0070f3",
+  letterSpacing: "2px",
 };
 
 const container = {

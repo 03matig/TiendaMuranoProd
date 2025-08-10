@@ -2,7 +2,11 @@
 
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import supabase from "@/lib/cs";
+import jwt from "jsonwebtoken";
+import { getSupabase } from "@/lib/cs"; // Importar configuración de Supabase
+
+const JWT_SECRET = process.env.JWT_SECRET || "murano_super_secreto"; // 🔐 Usa variable de entorno en producción
+const JWT_EXPIRES_IN = "2h"; // Puedes ajustar duración del token aquí
 
 export async function POST(req: Request) {
   try {
@@ -12,7 +16,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Todos los campos son obligatorios" }, { status: 400 });
     }
 
-    // 🔹 Buscar el usuario por email en la BD
+    // 🔎 Buscar el usuario por email
+    const supabase = getSupabase();
     const { data: user, error } = await supabase
       .from("users")
       .select("id, name, email, pw, role")
@@ -23,23 +28,39 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Credenciales incorrectas" }, { status: 401 });
     }
 
-    // 🔹 Comparar la contraseña ingresada con la almacenada en la BD
+    // 🔐 Comparar contraseñas
     const passwordMatch = await bcrypt.compare(password, user.pw);
-    
+
     if (!passwordMatch) {
       return NextResponse.json({ error: "Credenciales incorrectas" }, { status: 401 });
     }
 
-    // ✅ Usuario autenticado correctamente
-    return NextResponse.json({ 
-      message: "Inicio de sesión exitoso", 
-      user: {
+    // ✅ Generar JWT
+    const token = jwt.sign(
+      {
         id: user.id,
         name: user.name,
         email: user.email,
         role: user.role
-      }
-    }, { status: 200 });
+      },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    );
+
+    // 🎯 Respuesta exitosa con token
+    return NextResponse.json(
+      {
+        message: "Inicio de sesión exitoso",
+        token, // Se devuelve al frontend para almacenarlo
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role
+        }
+      },
+      { status: 200 }
+    );
 
   } catch (error) {
     console.error("Error en el servidor:", error);
@@ -47,7 +68,7 @@ export async function POST(req: Request) {
   }
 }
 
-// 🔹 Bloquear otros métodos
+// 🔒 Bloquear métodos GET
 export async function GET() {
   return NextResponse.json({ error: "Método no permitido" }, { status: 405 });
 }

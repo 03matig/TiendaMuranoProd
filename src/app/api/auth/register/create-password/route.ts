@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import supabase from "@/lib/cs";
+import { getSupabase } from "@/lib/cs"; // Importar configuración de Supabase
 
 export async function POST(req: Request) {
   try {
@@ -14,6 +14,7 @@ export async function POST(req: Request) {
     }
 
     // 🔎 Verificar si el email ya existe
+    const supabase = getSupabase();
     const { data: existingUser, error: checkError } = await supabase
       .from("users")
       .select("email")

@@ -27,9 +27,14 @@ export default function ProductsView() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("/api/admin/products/view-products");
+        const token = localStorage.getItem("murano_token");
+        const res = await fetch("/api/admin/products/view-products", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const json = await res.json();
-        setProducts(json.products);
+        setProducts(json.products); // Ahora sí json.products estará definido
       } catch (error) {
         console.error("Error al cargar productos", error);
       } finally {
