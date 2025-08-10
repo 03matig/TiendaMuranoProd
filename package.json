@@ -2,10 +2,14 @@
   "name": "merchandisingmurano",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "npm@10",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p $PORT",
     "lint": "next lint"
   },
   "dependencies": {

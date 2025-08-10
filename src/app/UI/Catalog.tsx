@@ -19,25 +19,27 @@ type Product = {
   imagen: string; // URL completa desde Supabase
 };
 
-
 const Catalog = () => {
-  const [products, setProducts] = useState<Product[]>([]); // 🔹 Estado para los productos
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]); // 🔹 Estado para los filtros
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter(); // 🔹 Para redirigir al detalle del producto
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProducts = async () => {
       const supabase = getSupabase();
       setLoading(true);
+
+      // 👇 Tipamos la query y resolvemos el null con '?? []'
       const { data, error } = await supabase.from("stock").select("*");
 
       if (error) {
         console.error("Error obteniendo productos:", error.message);
       } else {
-        console.log("Valores de nombre_archivo:", data.map(p=>p.nombre_archivo));
-        setProducts(data);
-        setFilteredProducts(data); // Inicializa los filtros con los datos originales
+        const list = (data ?? []) as Product[]; // tipa el resultado
+        console.log("Valores de nombre_archivo:", list.map(p => p.nombre_archivo));
+        setProducts(list);
+        setFilteredProducts(list);
       }
       setLoading(false);
     };
@@ -48,7 +50,13 @@ const Catalog = () => {
   // 🔹 Manejar el clic en una ProductCard
   const handleProductClick = (product: Product) => {
     router.push(
-      `/Vistas/product/${product.id_prenda}?image=${encodeURIComponent(product.nombre_archivo)}&name=${encodeURIComponent(product.nombre)}&desc=${encodeURIComponent(product.descripcion || "")}&price=${product.precio}&sizes=${encodeURIComponent(product.tallas ? product.tallas.join(",") : "")}`
+      `/Vistas/product/${product.id_prenda}?image=${encodeURIComponent(
+        product.nombre_archivo
+      )}&name=${encodeURIComponent(product.nombre)}&desc=${encodeURIComponent(
+        product.descripcion || ""
+      )}&price=${product.precio}&sizes=${encodeURIComponent(
+        product.tallas ? product.tallas.join(",") : ""
+      )}`
     );
   };
 
@@ -70,7 +78,10 @@ const Catalog = () => {
             ) : (
               <div className={styles.productsGrid}>
                 {filteredProducts.map((product) => (
-                  <div key={product.id_prenda} onClick={() => handleProductClick(product)}>
+                  <div
+                    key={product.id_prenda}
+                    onClick={() => handleProductClick(product)}
+                  >
                     <ProductCard product={product} />
                   </div>
                 ))}
