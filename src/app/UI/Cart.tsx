@@ -12,8 +12,8 @@ const Cart = () => {
   // Calcular total
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-  function handleNavigateToCheckout() {
-    router.push("/Vistas/cart/cotizarPago");
+  function handleNavigateToAddressSelection() {
+    router.push("/Vistas/cart/seleccionarEnvio");
   }
 
   return (
@@ -49,7 +49,7 @@ const Cart = () => {
 
               <div className={styles.cartSummary}>
                 <h3>Total: ${total.toLocaleString()} CLP</h3>
-                <button className={styles.checkoutButton} onClick={handleNavigateToCheckout}>Ir a pagar</button>
+                <button className={styles.checkoutButton} onClick={handleNavigateToAddressSelection}>Ir a pagar</button>
                 <button className={styles.clearCartButton} onClick={clearCart}>
                   Vaciar carrito
                 </button>
