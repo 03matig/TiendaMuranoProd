@@ -30,6 +30,10 @@ const NUEVA_DIRECCION_ID = "new_address";
 export default function AddressSelection() {
   const router = useRouter();
 
+  // Paso 1: método de envío
+  const [shippingMethod, setShippingMethod] = useState<"pickup" | "delivery" | "">("");
+
+  // Paso 2: direcciones (solo si delivery)
   const [loading, setLoading] = useState(true);
   const [addresses, setAddresses] = useState<DeliveryAddress[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -141,9 +145,24 @@ export default function AddressSelection() {
     return Object.keys(newErrors).length === 0;
   }
 
-  // Guardar selección y continuar al cotizador
+  // Continuar al cotizador
   async function handleContinue() {
-    // Usa dirección existente
+    // Validar método
+    if (!shippingMethod) {
+      setErrors(prev => ({ ...prev, method: "Selecciona un método de envío." }));
+      return;
+    }
+
+    localStorage.setItem("murano_shipping_method", shippingMethod);
+
+    // Si es retiro en tienda: no requiere dirección
+    if (shippingMethod === "pickup") {
+      // Puedes guardar un objeto simbólico o limpiar el address
+      localStorage.removeItem("murano_shipping_address");
+      return router.push("/Vistas/cart/cotizarPago");
+    }
+
+    // Si es delivery: validar dirección
     if (selectedId !== NUEVA_DIRECCION_ID) {
       if (!selectedAddress) {
         setErrors(prev => ({ ...prev, selected: "Selecciona una dirección válida." }));
@@ -175,222 +194,288 @@ export default function AddressSelection() {
       <Header />
       <div className={styles.wrapper}>
         <div className={styles.card}>
-          <h1 className={styles.title}>Selecciona la dirección de envío</h1>
+          <h1 className={styles.title}>Seleccionar método de envío</h1>
           <p className={styles.subtitle}>
-            Elige una dirección registrada o añade una nueva para cotizar con Chilexpress.
+            Elige si deseas <strong>Retiro en tienda</strong> o <strong>Delivery</strong>. 
+            Si seleccionas Delivery, te pediremos tu dirección.
           </p>
 
-          {loading ? (
-            <div className={styles.skeleton}>Cargando direcciones…</div>
-          ) : (
-            <>
-              <section className={styles.section}>
-                <div className={styles.sectionHeader}>
-                  <h2>Mis direcciones</h2>
-                </div>
+          {/* Paso 1: Método de envío */}
+          <section className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>Método de envío</h2>
+            </div>
 
-                <ul className={styles.addressList}>
-                  {addresses.map(a => (
-                    <li key={a.id} className={styles.addressItem}>
-                      <label className={styles.addressRow}>
-                        <input
-                          type="radio"
-                          name="selectedAddress"
-                          checked={selectedId === a.id}
-                          onChange={() => handleSelect(a.id)}
-                        />
-                        <div className={styles.addressInfo}>
-                          <div className={styles.addressTop}>
-                            <span className={styles.addressName}>{a.full_name}</span>
-                          </div>
-                          <div className={styles.addressText}>{formatAddress(a)}</div>
-                          <div className={styles.addressMeta}>
-                            <span>{a.phone_number}</span>
-                            {a.descripcion ? <span> · {a.descripcion}</span> : null}
-                          </div>
-                        </div>
-                      </label>
-                    </li>
-                  ))}
-
-                  {/* Opción: Nueva dirección */}
-                  <li className={styles.addressItem}>
-                    <label className={styles.addressRow}>
-                      <input
-                        type="radio"
-                        name="selectedAddress"
-                        checked={selectedId === NUEVA_DIRECCION_ID}
-                        onChange={() => handleSelect(NUEVA_DIRECCION_ID)}
-                      />
-                      <div className={styles.addressInfo}>
-                        <div className={styles.addressTop}>
-                          <span className={styles.addressName}>Añadir nueva dirección</span>
-                          <span className={styles.badge}>Nueva</span>
-                        </div>
-                        <div className={styles.addressText}>
-                          Ingresa los datos y la usaremos para esta compra.
-                        </div>
-                      </div>
-                    </label>
-                  </li>
-                </ul>
-
-                {errors.selected && <p className={styles.error}>{errors.selected}</p>}
-              </section>
-
-              {/* Formulario visible SOLO si se selecciona “Nueva dirección” */}
-              {selectedId === NUEVA_DIRECCION_ID && (
-                <section className={styles.section}>
-                  <h2>Nueva dirección</h2>
-
-                  <div className={styles.form}>
-                    <div className={styles.grid2}>
-                      <div className={styles.field}>
-                        <label>Nombre completo *</label>
-                        <input
-                          name="full_name"
-                          value={form.full_name}
-                          onChange={handleChange}
-                          placeholder="Ej: Javiera Cofré"
-                        />
-                        {errors.full_name && <span className={styles.error}>{errors.full_name}</span>}
-                      </div>
-
-                      <div className={styles.field}>
-                        <label>Fecha de nacimiento *</label>
-                        <input
-                          type="date"
-                          name="dob"
-                          value={form.dob}
-                          onChange={handleChange}
-                        />
-                        {errors.dob && <span className={styles.error}>{errors.dob}</span>}
-                      </div>
-                    </div>
-
-                    <div className={styles.field}>
-                      <label>Teléfono *</label>
-                      <input
-                        name="phone_number"
-                        value={form.phone_number}
-                        onChange={handleChange}
-                        placeholder="+569..."
-                      />
-                      {errors.phone_number && <span className={styles.error}>{errors.phone_number}</span>}
-                    </div>
-
-                    <div className={styles.grid3}>
-                      <div className={styles.field}>
-                        <label>Región *</label>
-                        <select name="region" value={form.region} onChange={handleChange}>
-                          <option value="">Selecciona una región</option>
-                          {Object.keys(direcciones).map(region => (
-                            <option key={region} value={region}>{region}</option>
-                          ))}
-                        </select>
-                        {errors.region && <span className={styles.error}>{errors.region}</span>}
-                      </div>
-
-                      <div className={styles.field}>
-                        <label>Ciudad / Provincia *</label>
-                        <select
-                          name="ciudad"
-                          value={form.ciudad}
-                          onChange={handleChange}
-                          disabled={!form.region}
-                        >
-                          <option value="">Selecciona una ciudad</option>
-                          {ciudades.map(c => (
-                            <option key={c} value={c}>{c}</option>
-                          ))}
-                        </select>
-                        {errors.ciudad && <span className={styles.error}>{errors.ciudad}</span>}
-                      </div>
-
-                      <div className={styles.field}>
-                        <label>Comuna *</label>
-                        <select
-                          name="comuna"
-                          value={form.comuna}
-                          onChange={handleChange}
-                          disabled={!form.ciudad}
-                        >
-                          <option value="">Selecciona una comuna</option>
-                          {comunas.map(cm => (
-                            <option key={cm} value={cm}>{cm}</option>
-                          ))}
-                        </select>
-                        {errors.comuna && <span className={styles.error}>{errors.comuna}</span>}
-                      </div>
-                    </div>
-
-                    <div className={styles.grid3}>
-                      <div className={styles.field}>
-                        <label>Calle *</label>
-                        <input
-                          name="calle"
-                          value={form.calle}
-                          onChange={handleChange}
-                          placeholder="Av. Los Ríos"
-                        />
-                        {errors.calle && <span className={styles.error}>{errors.calle}</span>}
-                      </div>
-
-                      <div className={styles.field}>
-                        <label>Número *</label>
-                        <input
-                          name="numero"
-                          value={form.numero}
-                          onChange={handleChange}
-                          placeholder="11300"
-                        />
-                        {errors.numero && <span className={styles.error}>{errors.numero}</span>}
-                      </div>
-
-                      <div className={styles.field}>
-                        <label>Código Postal *</label>
-                        <input
-                          name="codigo_postal"
-                          value={form.codigo_postal}
-                          onChange={handleChange}
-                          placeholder="7550000"
-                        />
-                        {errors.codigo_postal && <span className={styles.error}>{errors.codigo_postal}</span>}
-                      </div>
-                    </div>
-
-                    <div className={styles.field}>
-                      <label>Descripción (opcional)</label>
-                      <textarea
-                        name="descripcion"
-                        value={form.descripcion}
-                        onChange={handleChange}
-                        placeholder="DEJAR EN CONSERJERÍA, portón negro, etc."
-                        rows={2}
-                      />
-                    </div>
+            <div className={styles.methodGrid}>
+              <label
+                className={`${styles.methodCard} ${shippingMethod === "pickup" ? styles.methodSelected : ""}`}
+                onClick={() => {
+                  setShippingMethod("pickup");
+                  setErrors(prev => { const { method, ...rest } = prev; return rest; });
+                }}
+              >
+                <div className={styles.methodIcon}>🏬</div>
+                <div className={styles.methodContent}>
+                  <div className={styles.methodHeading}>Retiro en tienda</div>
+                  <div className={styles.methodDesc}>
+                    Retira tu pedido en el punto de entrega de Murano. No necesitas dirección.
                   </div>
-                </section>
-              )}
+                </div>
+                <input
+                  type="radio"
+                  name="shippingMethod"
+                  className={styles.methodRadio}
+                  checked={shippingMethod === "pickup"}
+                  onChange={() => {}}
+                />
+              </label>
 
-              <div className={styles.footerActions}>
-                <button
-                  type="button"
-                  className={styles.secondaryBtn}
-                  onClick={() => router.back()}
-                >
-                  Volver
-                </button>
-                <button
-                  type="button"
-                  className={styles.primaryBtn}
-                  onClick={handleContinue}
-                >
-                  Usar esta dirección y continuar
-                </button>
-              </div>
+              <label
+                className={`${styles.methodCard} ${shippingMethod === "delivery" ? styles.methodSelected : ""}`}
+                onClick={() => {
+                  setShippingMethod("delivery");
+                  setErrors(prev => { const { method, ...rest } = prev; return rest; });
+                }}
+              >
+                <div className={styles.methodIcon}>🚚</div>
+                <div className={styles.methodContent}>
+                  <div className={styles.methodHeading}>Delivery</div>
+                  <div className={styles.methodDesc}>
+                    Enviamos a tu dirección con Chilexpress. Selecciona o crea una dirección.
+                  </div>
+                </div>
+                <input
+                  type="radio"
+                  name="shippingMethod"
+                  className={styles.methodRadio}
+                  checked={shippingMethod === "delivery"}
+                  onChange={() => {}}
+                />
+              </label>
+            </div>
+
+            {errors.method && <p className={styles.error}>{errors.method}</p>}
+          </section>
+
+
+          {/* Paso 2: Direcciones (solo si delivery) */}
+          {shippingMethod === "delivery" && (
+            <>
+              {loading ? (
+                <div className={styles.skeleton}>Cargando direcciones…</div>
+              ) : (
+                <>
+                  <section className={styles.section}>
+                    <div className={styles.sectionHeader}>
+                      <h2>Mis direcciones</h2>
+                    </div>
+
+                    <ul className={styles.addressList}>
+                      {addresses.map(a => (
+                        <li key={a.id} className={styles.addressItem}>
+                          <label className={styles.addressRow}>
+                            <input
+                              type="radio"
+                              name="selectedAddress"
+                              className={styles.checkCircle}
+                              checked={selectedId === a.id}
+                              onChange={() => handleSelect(a.id)}
+                            />
+                            <div className={styles.addressInfo}>
+                              <div className={styles.addressTop}>
+                                <span className={styles.addressName}>{a.full_name}</span>
+                              </div>
+                              <div className={styles.addressText}>{formatAddress(a)}</div>
+                              <div className={styles.addressMeta}>
+                                <span>{a.phone_number}</span>
+                                {a.descripcion ? <span> · {a.descripcion}</span> : null}
+                              </div>
+                            </div>
+                          </label>
+                        </li>
+                      ))}
+
+                      {/* Opción: Nueva dirección */}
+                      <li className={styles.addressItem}>
+                        <label className={styles.addressRow}>
+                          <input
+                            type="radio"
+                            name="selectedAddress"
+                            className={styles.checkCircle}
+                            checked={selectedId === NUEVA_DIRECCION_ID}
+                            onChange={() => handleSelect(NUEVA_DIRECCION_ID)}
+                          />
+                          <div className={styles.addressInfo}>
+                            <div className={styles.addressTop}>
+                              <span className={styles.addressName}>Añadir nueva dirección</span>
+                              <span className={styles.badge}>Nueva</span>
+                            </div>
+                            <div className={styles.addressText}>
+                              Ingresa los datos y la usaremos para esta compra.
+                            </div>
+                          </div>
+                        </label>
+                      </li>
+                    </ul>
+
+                    {errors.selected && <p className={styles.error}>{errors.selected}</p>}
+                  </section>
+
+                  {/* Formulario visible SOLO si se selecciona “Nueva dirección” */}
+                  {selectedId === NUEVA_DIRECCION_ID && (
+                    <section className={styles.section}>
+                      <h2>Nueva dirección</h2>
+
+                      <div className={styles.form}>
+                        <div className={styles.grid2}>
+                          <div className={styles.field}>
+                            <label>Nombre completo *</label>
+                            <input
+                              name="full_name"
+                              value={form.full_name}
+                              onChange={handleChange}
+                              placeholder="Ej: John Doe"
+                            />
+                            {errors.full_name && <span className={styles.error}>{errors.full_name}</span>}
+                          </div>
+
+                          <div className={styles.field}>
+                            <label>Fecha de nacimiento *</label>
+                            <input
+                              type="date"
+                              name="dob"
+                              value={form.dob}
+                              onChange={handleChange}
+                            />
+                            {errors.dob && <span className={styles.error}>{errors.dob}</span>}
+                          </div>
+                        </div>
+
+                        <div className={styles.field}>
+                          <label>Teléfono *</label>
+                          <input
+                            name="phone_number"
+                            value={form.phone_number}
+                            onChange={handleChange}
+                            placeholder="+569..."
+                          />
+                          {errors.phone_number && <span className={styles.error}>{errors.phone_number}</span>}
+                        </div>
+
+                        <div className={styles.grid3}>
+                          <div className={styles.field}>
+                            <label>Región *</label>
+                            <select name="region" value={form.region} onChange={handleChange}>
+                              <option value="">Selecciona una región</option>
+                              {Object.keys(direcciones).map(region => (
+                                <option key={region} value={region}>{region}</option>
+                              ))}
+                            </select>
+                            {errors.region && <span className={styles.error}>{errors.region}</span>}
+                          </div>
+
+                          <div className={styles.field}>
+                            <label>Ciudad / Provincia *</label>
+                            <select
+                              name="ciudad"
+                              value={form.ciudad}
+                              onChange={handleChange}
+                              disabled={!form.region}
+                            >
+                              <option value="">Selecciona una ciudad</option>
+                              {ciudades.map(c => (
+                                <option key={c} value={c}>{c}</option>
+                              ))}
+                            </select>
+                            {errors.ciudad && <span className={styles.error}>{errors.ciudad}</span>}
+                          </div>
+
+                          <div className={styles.field}>
+                            <label>Comuna *</label>
+                            <select
+                              name="comuna"
+                              value={form.comuna}
+                              onChange={handleChange}
+                              disabled={!form.ciudad}
+                            >
+                              <option value="">Selecciona una comuna</option>
+                              {comunas.map(cm => (
+                                <option key={cm} value={cm}>{cm}</option>
+                              ))}
+                            </select>
+                            {errors.comuna && <span className={styles.error}>{errors.comuna}</span>}
+                          </div>
+                        </div>
+
+                        <div className={styles.grid3}>
+                          <div className={styles.field}>
+                            <label>Calle *</label>
+                            <input
+                              name="calle"
+                              value={form.calle}
+                              onChange={handleChange}
+                              placeholder="Ej: Av. Providencia"
+                            />
+                            {errors.calle && <span className={styles.error}>{errors.calle}</span>}
+                          </div>
+
+                          <div className={styles.field}>
+                            <label>Número *</label>
+                            <input
+                              name="numero"
+                              value={form.numero}
+                              onChange={handleChange}
+                              placeholder="Ej: 900"
+                            />
+                            {errors.numero && <span className={styles.error}>{errors.numero}</span>}
+                          </div>
+
+                          <div className={styles.field}>
+                            <label>Código Postal *</label>
+                            <input
+                              name="codigo_postal"
+                              value={form.codigo_postal}
+                              onChange={handleChange}
+                              placeholder="111 1111"
+                            />
+                            {errors.codigo_postal && <span className={styles.error}>{errors.codigo_postal}</span>}
+                          </div>
+                        </div>
+
+                        <div className={styles.field}>
+                          <label>Descripción (opcional)</label>
+                          <textarea
+                            name="descripcion"
+                            value={form.descripcion}
+                            onChange={handleChange}
+                            placeholder="Ej: Dejar en conserjería"
+                            rows={2}
+                          />
+                        </div>
+                      </div>
+                    </section>
+                  )}
+                </>
+              )}
             </>
           )}
+
+          <div className={styles.footerActions}>
+            <button
+              type="button"
+              className={styles.secondaryBtn}
+              onClick={() => router.back()}
+            >
+              Volver
+            </button>
+            <button
+              type="button"
+              className={styles.primaryBtn}
+              onClick={handleContinue}
+            >
+              {shippingMethod === "pickup" ? "Confirmar y continuar" : "Usar esta opción y continuar"}
+            </button>
+          </div>
         </div>
       </div>
 

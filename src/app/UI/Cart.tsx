@@ -49,7 +49,7 @@ const Cart = () => {
 
               <div className={styles.cartSummary}>
                 <h3>Total: ${total.toLocaleString()} CLP</h3>
-                <button className={styles.checkoutButton} onClick={handleNavigateToAddressSelection}>Ir a pagar</button>
+                <button className={styles.checkoutButton} onClick={handleNavigateToAddressSelection}>Seleccionar método de envío</button>
                 <button className={styles.clearCartButton} onClick={clearCart}>
                   Vaciar carrito
                 </button>
