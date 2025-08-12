@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/app/UI/components/Header";
 import Footer from "@/app/UI/components/Footer";
-import styles from "./AddressSelection.module.css";
+import styles from "./addressSelection.module.css";
 import direcciones from "@/app/UI/RegisterComponents/Direcciones.json";
 
 type DeliveryAddress = {

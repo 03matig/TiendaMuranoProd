@@ -43,7 +43,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 10px;
+    margin-top: 0px;
 }
 
 .carritoContainer {
@@ -56,13 +56,14 @@
 
 /* Campo de búsqueda y carrito */
 .rightSection {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-    margin-right: 40px;
-    gap: 1rem;
-    flex: 1;
-    justify-content: flex-end;
+  display: flex;
+  align-items: center;
+  /* margin-top: 10px;  <- quítalo */
+  margin-top: 0;
+  margin-right: 40px;
+  gap: 1rem;
+  flex: 1;
+  justify-content: flex-end;
 }
 
 .searchBar {
@@ -378,8 +379,8 @@
   }
 
   .logoHeader {
-    transform: scale(1);
-    transition: transform 0.3s ease-in-out;
+    transform: none;
+    transition: transform 0.25s ease-in-out;
   }
   
   .logoHeader:hover {

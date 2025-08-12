@@ -9,7 +9,11 @@ import styles from "./Header.module.css";
 import { FaUserCircle } from "react-icons/fa";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 
-const Header = () => {
+type HeaderProps = {
+  showFixedLogo?: boolean; // 👈 nuevo
+};
+
+const Header = ({ showFixedLogo = true }: HeaderProps) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { cart, removeFromCart, updateQuantity } = useCart();
@@ -61,14 +65,28 @@ const Header = () => {
         </div>
 
         <div className={styles.logo}>
-          <Image
-            src="/images/UI/LogoMurano.png"
-            alt="Logo Murano"
-            width={80}
-            height={80}
-            className={styles.logoHeader}
-            onClick={() => router.push("/")}
-          />
+          {/* 🧭 Ancla fija para que el AnimatedLogo tenga destino siempre */}
+          <div
+            id="murano-navbar-logo-anchor"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              width: 80,   // 👈 ancho final del logo en header (ajusta si quieres)
+              height: 80,  // 👈 alto final del logo en header (ajusta si quieres)
+              justifyContent: "center",
+            }}
+          >
+            {showFixedLogo && (
+              <Image
+                src="/images/UI/LogoMurano.png"
+                alt="Logo Murano"
+                width={80}
+                height={80}
+                className={styles.logoHeader}
+                onClick={() => router.push("/")}
+              />
+            )}
+          </div>
         </div>
 
         <div className={styles.rightSection}>
@@ -146,9 +164,19 @@ const Header = () => {
                           <p>{item.name}</p>
                           <p>${item.price.toLocaleString()} CLP</p>
                           <div className={styles.quantityControls}>
-                            <button className={styles.quantityButton} onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
+                            <button
+                              className={styles.quantityButton}
+                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            >
+                              -
+                            </button>
                             <span>{item.quantity}</span>
-                            <button className={styles.quantityButton} onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+                            <button
+                              className={styles.quantityButton}
+                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            >
+                              +
+                            </button>
                           </div>
                           <button
                             className={styles.removeButton}
