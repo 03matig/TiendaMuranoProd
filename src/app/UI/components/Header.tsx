@@ -8,12 +8,19 @@ import Link from "next/link";
 import styles from "./Header.module.css";
 import { FaUserCircle } from "react-icons/fa";
 import { AiOutlineShoppingCart } from "react-icons/ai";
+import AnimatedLogoMurano from "../components/AnimatedLogoMurano";
 
 type HeaderProps = {
-  showFixedLogo?: boolean; // 👈 nuevo
+  showFixedLogo?: boolean;
+  onLogoAnimationMoveStart?: () => void;
+  onLogoAnimationEnd?: () => void;
 };
 
-const Header = ({ showFixedLogo = true }: HeaderProps) => {
+const Header = ({
+  showFixedLogo = true,
+  onLogoAnimationMoveStart,
+  onLogoAnimationEnd,
+}: HeaderProps) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { cart, removeFromCart, updateQuantity } = useCart();
@@ -21,7 +28,17 @@ const Header = ({ showFixedLogo = true }: HeaderProps) => {
   const [userName, setUserName] = useState("");
   const [userRole, setUserRole] = useState("");
   const [userAvatar, setUserAvatar] = useState("/images/default-avatar.png");
+  const [isPhone, setIsPhone] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    // Detectar solo celulares (<600px)
+    const mq = window.matchMedia("(max-width: 599px)");
+    const apply = () => setIsPhone(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
 
   useEffect(() => {
     const user = localStorage.getItem("user");
@@ -48,59 +65,69 @@ const Header = ({ showFixedLogo = true }: HeaderProps) => {
     router.push("/Vistas/profile");
   };
 
+  const handleNavigateToCatalog = () => {
+    router.push("/Vistas/catalog");
+  };
+
   return (
     <header className={styles.header}>
+      {/* Top bar con marquee + link */}
       <div className={styles.topBar}>
-        <p>Este es el texto del slide</p>
-        <a href="#">Leer más</a>
+        <div className={styles.marquee}>
+          <p>¡Ahora tenemos múltiples opciones para cotizar tu envío!</p>
+        </div>
+        <a className={styles.topBarLink} onClick={handleNavigateToCatalog}>
+          Ver Catálogo de productos
+        </a>
       </div>
 
       <div className={styles.navBar}>
         <div className={styles.rightSection}>
           <input
             type="text"
-            placeholder="Busque productos aquí..."
-            className={styles.searchBar}
+            placeholder={isPhone ? "🔍" : "Busque productos aquí..."}
+            className={`${styles.searchBar} ${isPhone ? styles.searchBarPhone : ""}`}
           />
         </div>
 
         <div className={styles.logo}>
-          {/* 🧭 Ancla fija para que el AnimatedLogo tenga destino siempre */}
           <div
             id="murano-navbar-logo-anchor"
             style={{
               display: "inline-flex",
               alignItems: "center",
-              width: 80,   // 👈 ancho final del logo en header (ajusta si quieres)
-              height: 80,  // 👈 alto final del logo en header (ajusta si quieres)
               justifyContent: "center",
+              width: 80,
+              height: 80,
             }}
           >
-            {showFixedLogo && (
-              <Image
-                src="/images/UI/LogoMurano.png"
-                alt="Logo Murano"
-                width={80}
-                height={80}
-                className={styles.logoHeader}
-                onClick={() => router.push("/")}
-              />
-            )}
+            <AnimatedLogoMurano
+              finalSize={80}
+              onMoveStart={onLogoAnimationMoveStart}
+              onFinish={onLogoAnimationEnd}
+            />
           </div>
         </div>
 
-        <div className={styles.rightSection}>
-          {/* 🔹 Perfil */}
+        <div
+          className={`${styles.rightSection} ${
+            isPhone ? styles.rightSectionPhone : ""
+          }`}
+        >
           {isLoggedIn && (
             <div
-              className={styles.profileContainer}
+              className={`${styles.profileContainer} ${
+                isPhone ? styles.profileContainerPhone : ""
+              }`}
               onMouseLeave={() => setDropdownOpen(false)}
             >
               <button
-                className={styles.profileIconButton}
+                className={`${styles.profileIconButton} ${
+                  isPhone ? styles.profileIconButtonPhone : ""
+                }`}
                 onClick={() => setDropdownOpen(!isDropdownOpen)}
               >
-                <FaUserCircle size={40} color="#ccc" />
+                <FaUserCircle size={isPhone ? 32 : 40} color="#ccc" />
               </button>
 
               {isDropdownOpen && (
@@ -129,17 +156,22 @@ const Header = ({ showFixedLogo = true }: HeaderProps) => {
             </div>
           )}
 
-          {/* 🔹 Carrito */}
           <div
-            className={styles.carritoContainer}
+            className={`${styles.carritoContainer} ${
+              isPhone ? styles.carritoContainerPhone : ""
+            }`}
             onMouseLeave={() => setIsCartOpen(false)}
           >
             <div
-              className={styles.carrito}
+              className={`${styles.carrito} ${
+                isPhone ? styles.carritoPhone : ""
+              }`}
               onClick={() => setIsCartOpen(!isCartOpen)}
             >
-              <AiOutlineShoppingCart size={35} color="#4a4a4a" />
-              <span>{totalItemsInCart}</span>
+              <AiOutlineShoppingCart size={isPhone ? 30 : 35} color="#4a4a4a" />
+              <span className={isPhone ? styles.cartBadgePhone : ""}>
+                {totalItemsInCart}
+              </span>
             </div>
 
             {isCartOpen && (
@@ -166,14 +198,18 @@ const Header = ({ showFixedLogo = true }: HeaderProps) => {
                           <div className={styles.quantityControls}>
                             <button
                               className={styles.quantityButton}
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                              onClick={() =>
+                                updateQuantity(item.id, item.quantity - 1)
+                              }
                             >
                               -
                             </button>
                             <span>{item.quantity}</span>
                             <button
                               className={styles.quantityButton}
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                              onClick={() =>
+                                updateQuantity(item.id, item.quantity + 1)
+                              }
                             >
                               +
                             </button>
@@ -186,7 +222,9 @@ const Header = ({ showFixedLogo = true }: HeaderProps) => {
                           </button>
                         </div>
                       </div>
-                      {index !== cart.length - 1 && <hr className={styles.divider} />}
+                      {index !== cart.length - 1 && (
+                        <hr className={styles.divider} />
+                      )}
                     </React.Fragment>
                   ))
                 )}

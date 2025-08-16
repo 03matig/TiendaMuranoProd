@@ -1,49 +1,121 @@
 /* Estilo general del header */
 .header {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    z-index: 50;
-    background-color: white;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  z-index: 50;
+  background-color: white;
 }
 
 /* Barra superior */
 .topBar {
-    background-color: #1f1f1f; /* Ajustado al color de la referencia */
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
+  background-color: #1f1f1f;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 1rem;                 /* separa marquee del link */
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  position: relative;
+  overflow: hidden;
 }
 
-.topBar a {
-    color: #0070f3;
-    text-decoration: none;
+/* Link fijo a la derecha: no se oculta ni se encoge */
+.topBarLink {
+  color: #0070f3;
+  text-decoration: none;
+  white-space: nowrap;
+  flex: 0 0 auto;           /* no shrink */
+  position: relative;
+  z-index: 3;               /* sobre el fade del marquee */
+}
+.topBarLink:hover { text-decoration: underline; }
+
+/* 🔹 Marquee wrapper */
+.marquee {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+  min-width: 0;             /* permite que flex recorte bien */
+  isolation: isolate;       /* crea nuevo stacking context para sus fades */
 }
 
-.topBar a:hover {
-    text-decoration: underline;
+/* Texto animado */
+.marquee p {
+  display: inline-block;
+  padding-left: 100%;       /* arranca fuera por la derecha */
+  animation: marquee 12s linear infinite;
 }
+
+/* Animación */
+@keyframes marquee {
+  0%   { transform: translateX(0%); }
+  100% { transform: translateX(-100%); }
+}
+
+/* Fades SOLO dentro del marquee (no tapan el link) */
+.marquee::before,
+.marquee::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 40px;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+.marquee::before {
+  left: 0;
+  background: linear-gradient(to right, #1f1f1f, transparent);
+}
+.marquee::after {
+  right: 0;
+  background: linear-gradient(to left, #1f1f1f, transparent);
+}
+
+/* 🔹 Fade en los bordes */
+.topBar::before,
+.topBar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 40px; /* ancho del degradado */
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.topBar::before {
+  left: 0;
+  background: linear-gradient(to right, #1f1f1f, transparent);
+}
+
+.topBar::after {
+  right: 0;
+  background: linear-gradient(to left, #1f1f1f, transparent);
+}
+
+.topBar a { color: #0070f3; text-decoration: none; }
+.topBar a:hover { text-decoration: underline; }
 
 /* Barra principal */
 .navBar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
 }
 
 /* Logo */
 .logo {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 0px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0px;
 }
 
 .carritoContainer {
@@ -53,12 +125,10 @@
   color: #0070f3;
 }
 
-
 /* Campo de búsqueda y carrito */
 .rightSection {
   display: flex;
   align-items: center;
-  /* margin-top: 10px;  <- quítalo */
   margin-top: 0;
   margin-right: 40px;
   gap: 1rem;
@@ -67,29 +137,32 @@
 }
 
 .searchBar {
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 999px;
-    width: 200px;
-    font-size: 0.875rem;
-    background-color: white;
-    margin-left: 40px;
-    margin-top: 10px;
-    margin-right: auto; /* Para alinear la búsqueda a la izquierda */
-    transform: scale(1);
-    transition: transform 0.3s ease-in-out;
-}
-
-.searchBar:hover{
-  transform: scale(1.25);
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 999px;
+  width: 200px;
+  font-size: 0.875rem;
+  background-color: white;
+  margin-left: 40px;
+  margin-top: 10px;
+  margin-right: auto; /* alinear búsqueda a la izquierda */
+  transform: scale(1);
   transition: transform 0.3s ease-in-out;
 }
 
-.searchBar:focus {
-    outline: none;
-    border-color: #0070f3;
+.searchBar:hover { transform: scale(1.25); }
+.searchBar:focus { outline: none; border-color: #0070f3; }
+
+/* 🔹 Estilo específico para CELULARES (<600px) */
+.searchBarPhone {
+  width: 44px;          /* mucho más angosto */
+  text-align: center;
+  padding: 0.5rem;
+  margin-left: 8px;
+  margin-right: auto;
 }
 
+/* Carrito */
 .carrito {
     position: relative;
     display:flex;
@@ -100,11 +173,10 @@
     transition: background 0.3s ease;
     cursor: pointer;
     color: #4a4a4a;
-    margin-left: 1rem; /* Espaciado extra para separarlo */
+    margin-left: 1rem;
     transform: scale(1);
     transition: transform 0.3s ease-in-out;
 }
-
 .carrito:hover {
     background: rgba(200, 200, 200, 0.5);
     cursor: pointer;
@@ -112,7 +184,6 @@
     transition: transform 0.3s ease-in-out;
     color: #0070f3;
 }
-
 .carrito span {
     position: absolute;
     top: -8px;
@@ -129,10 +200,10 @@
     border-radius: 50%;
 }
 
-/* Estilos del menú desplegable */
+/* Dropdown carrito */
 .dropdown {
     position: absolute;
-    top: 50px; /* Ajusta la posición debajo del carrito */
+    top: 50px;
     right: 0;
     width: 400px;
     height: auto;
@@ -144,19 +215,11 @@
     z-index: 100;
     overflow-y: auto;
     transition: max-height 0.5s ease-in-out;
-    max-height: 500px; /* Altura máxima del dropdown */
-  }
-  
-  .dropdown.open {
-    max-height: 300px;
-  }
-
-  .dropdown.closed {
-    max-height: 0;
-  }
-
-  /* Flecha indicadora */
-  .dropdown::before {
+    max-height: 500px;
+}
+.dropdown.open { max-height: 300px; }
+.dropdown.closed { max-height: 0; }
+.dropdown::before {
     content: "";
     position: absolute;
     top: -10px;
@@ -164,15 +227,10 @@
     border-width: 5px;
     border-style: solid;
     border-color: transparent transparent white transparent;
-  }
+}
 
 /* Línea divisoria */
-.divider {
-    width: 60%;
-    height: 1px;
-    background-color: #ccc;
-    margin: 10px auto;
-}
+.divider { width: 60%; height: 1px; background-color: #ccc; margin: 10px auto; }
 
 /* Navegación */
 .navContainer {
@@ -183,272 +241,122 @@
     align-items: center;
     padding: 0px 16px;
 }
-
-.nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-}
-
-.nav ul {
-    display: flex;
-    list-style: none;
-    gap: 2rem;
-}
-
+.nav { display: flex; justify-content: center; align-items: center; gap: 2rem; }
+.nav ul { display: flex; list-style: none; gap: 2rem; }
 .nav ul li a {
-    text-decoration: none;
-    color: #333;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: color 0.2s;
+    text-decoration: none; color: #333; font-size: 1rem; font-weight: 500; transition: color 0.2s;
+}
+.nav ul li a:hover { color: #0070f3; }
+
+/* Login/Register */
+.login { flex: 1; text-align: left; margin-left: 110px; }
+.loginregister{ display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 10px 0; }
+.registrarse { flex: 1; text-align: right; margin-right: 110px; }
+.login a, .registrarse a { text-decoration: none; color: #333; font-weight: bold; }
+.login a:hover, .registrarse a:hover { color: #0070f3; }
+
+/* Divider */
+.divider { border: none; border-top: 1px solid #ddd; margin: 1rem 0; width: 100%; }
+
+/* Item de carrito */
+.cartItem {
+  display: flex; align-items: flex-start; gap: 10px; padding: 10px;
+  border-radius: 8px; background-color: #f9f9f9; box-shadow: 0 1px 4px rgba(0,0,0,.08);
+  margin-bottom: 10px; transition: background-color .2s ease;
+}
+.cartItem:hover { background-color: #f1f1f1; }
+.cartItem img { width: 60px; height: 60px; object-fit: contain; border-radius: 4px; border: 1px solid #ddd; }
+.cartItem div { flex-grow: 1; display: flex; flex-direction: column; gap: 4px; }
+.cartItem p { margin: 0; font-size: 0.95rem; font-weight: 500; color: #333; }
+
+/* Botón pagar */
+.checkoutButton {
+  display: block; width: 100%; background: #0070f3; color: white; border: none;
+  padding: 0.8rem; border-radius: 5px; text-align: center; font-size: 1rem; font-weight: bold;
+  cursor: pointer; transition: background 0.3s ease;
+}
+.checkoutButton:hover { background: #005bb5; }
+
+/* Perfil */
+.profileContainer {
+  position: relative; display: flex; align-items: center; cursor: pointer; border-radius: 50%;
+  transform: scale(1.25); color: #0070f3;
+}
+.profileContainer:hover { background: rgba(200,200,200,0.5); cursor: pointer; }
+.profilePic { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #ffffff; }
+.profileDropdown {
+  position: absolute; top: 45px; right: 0; background-color: white; border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2); padding: 10px; min-width: 120px; z-index: 100;
+}
+.profileDropdown ul { list-style: none; padding: 0; margin: 0; }
+.profileDropdown ul li { padding: 8px 12px; cursor: pointer; }
+.profileDropdown ul li:hover { background-color: #f0f0f0; }
+.profileIconButton {
+  background: none; border: none; padding: 0; margin: 0; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; width: 40px; height: 40px; border-radius: 50%; transition: background .3s, transform .3s;
+}
+.profileIconButton:hover { transform: scale(1.25); cursor: pointer; color: #0070f3; }
+
+/* Logo hover */
+.logoHeader { transform: none; transition: transform 0.25s ease-in-out; }
+.logoHeader:hover { transform: scale(1.25); cursor: pointer; transition: transform 0.3s ease-in-out; }
+
+/* Botones cantidad / eliminar */
+.quantityButton, .removeButton {
+  color:#000; background:#fff; border:1px solid #ccc; padding:4px 8px; font-size:.9rem;
+  cursor:pointer; border-radius:4px; transition:all .2s ease-in-out;
+}
+.quantityButton:hover { background:#f0f0f0; border-color:#888; }
+.removeButton:hover { background:#ffe5e5; border-color:red; color:red; }
+
+/* Línea divisoria (cart interior) */
+.divider { width: 90%; height: 1px; background-color: #ccc; margin: 10px auto; }
+
+.quantityControls { display: flex; align-items: center; justify-content: flex-start; gap: 8px; margin-top: 4px; }
+.quantityControls button {
+  background:#fff; color:#000; border:1px solid #ccc; padding:4px 10px; font-size:.9rem;
+  cursor:pointer; border-radius:4px; transition:all .2s ease-in-out;
+}
+.quantityControls button:hover { background:#f0f0f0; border-color:#888; }
+.quantityControls span { font-weight:bold; color:#333; font-size:.95rem; min-width:20px; text-align:center; }
+
+/* 🔹 Responsive específico para CELULARES (<600px) */
+.searchBarPhone {
+  width: 44px;
+  text-align: center;
+  padding: 0.5rem;
+  margin-left: 4px;
+  margin-right: auto;
 }
 
-.nav ul li a:hover {
-    color: #0070f3;
+.rightSectionPhone {
+  gap: 0.01rem; /* menos separación entre íconos */
+  margin-right: 4px; /* menos margen a la derecha */
+  margin-left: auto;
 }
 
-.login {
-    flex: 1; /* Permite que el contenido ocupe espacio a la izquierda */
-    text-align: left;
-    margin-left: 110px;
+.profileContainerPhone {
+  transform: scale(1); /* evitar que sea tan grande */
 }
 
-.loginregister{
-    display: flex;
-    justify-content: space-between; /* 👈 Distribuye los elementos a los extremos */
-    align-items: center;
-    width: 100%;
-    padding: 10px 0;
+.profileIconButtonPhone {
+  width: 32px;
+  height: 32px;
 }
 
-.registrarse {
-    flex: 1; /* Permite que el contenido ocupe espacio a la derecha */
-    text-align: right;
-    margin-right: 110px;
+.carritoPhone {
+  padding: 6px;
+  margin-left: 0.5rem;
 }
 
-.login a, .registrarse a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-  }
-  
-.login a:hover, .registrarse a:hover {
-    color: #0070f3; /* Efecto hover en los enlaces */
-  }
+.carritoContainerPhone {
+  margin-right: 0; /* menos espacio extra */
+}
 
-  /* Divider */
-.divider {
-    border: none;
-    border-top: 1px solid #ddd; /* Línea gris clara */
-    margin: 1rem 0;
-    width: 100%;
-  }
-
-  /* Estilo del ítem del carrito desplegable */
-  .cartItem {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-    margin-bottom: 10px;
-    transition: background-color 0.2s ease;
-  }
-
-  .cartItem:hover {
-    background-color: #f1f1f1;
-  }
-
-  .cartItem img {
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-  }
-
-  .cartItem div {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .cartItem p {
-    margin: 0;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #333;
-  }
-
-  /* Botón "Ir a pagar" */
-  .checkoutButton {
-    display: block;
-    width: 100%;
-    background: #0070f3;
-    color: white;
-    border: none;
-    padding: 0.8rem;
-    border-radius: 5px;
-    text-align: center;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  .checkoutButton:hover {
-    background: #005bb5;
-  }
-  
-  .profileContainer {
-    position: relative;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    border-radius: 50%;
-    transform: scale(1.25);
-    color: #0070f3;
-  }
-
-  .profileContainer:hover {
-      background: rgba(200, 200, 200, 0.5);
-      cursor: pointer;
-  }
-  
-  .profilePic {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%; /* 🔹 Hace la imagen circular */
-    object-fit: cover;
-    border: 2px solid #ffffff; /* 🔹 Agrega un borde para destacar */
-  }
-  
-  .profileDropdown {
-    position: absolute;
-    top: 45px;
-    right: 0;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    padding: 10px;
-    min-width: 120px;
-    z-index: 100;
-  }
-
-  .profileDropdown ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .profileDropdown ul li {
-    padding: 8px 12px;
-    cursor: pointer;
-  }
-
-  .profileDropdown ul li:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .profileIconButton {
-    background: none;
-    border: none;
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%; /* 🔹 esto se mantiene */
-    transition: background 0.3s ease-in-out, transform 0.3s ease-in-out;
-  }
-  
-  .profileIconButton:hover {
-    transform: scale(1.25);
-    cursor: pointer;
-    transition: transform 0.3s ease-in-out;
-    color: #0070f3;
-  }
-
-  .logoHeader {
-    transform: none;
-    transition: transform 0.25s ease-in-out;
-  }
-  
-  .logoHeader:hover {
-    transform: scale(1.25);
-    cursor: pointer;
-    transition: transform 0.3s ease-in-out;
-  }
-
-  /* Botones de cantidad y eliminar (modo limpio con borde y hover) */
-  .quantityButton,
-  .removeButton {
-    color: #000;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    padding: 4px 8px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: all 0.2s ease-in-out;
-  }
-
-  .quantityButton:hover {
-    background-color: #f0f0f0;
-    border-color: #888;
-  }
-
-  .removeButton:hover {
-    background-color: #ffe5e5;
-    border-color: red;
-    color: red;
-  }
-
-  /* Línea divisoria */
-  .divider {
-    width: 90%;
-    height: 1px;
-    background-color: #ccc;
-    margin: 10px auto;
-  }
-
-  .quantityControls {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 8px;
-    margin-top: 4px;
-  }
-
-  .quantityControls button {
-    background: #fff;
-    color: #000;
-    border: 1px solid #ccc;
-    padding: 4px 10px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: all 0.2s ease-in-out;
-  }
-
-  .quantityControls button:hover {
-    background-color: #f0f0f0;
-    border-color: #888;
-  }
-
-  .quantityControls span {
-    font-weight: bold;
-    color: #333;
-    font-size: 0.95rem;
-    min-width: 20px;
-    text-align: center;
-  }
+.cartBadgePhone {
+  top: -6px !important;
+  right: -6px !important;
+  width: 16px !important;
+  height: 16px !important;
+  font-size: 0.65rem !important;
+}
